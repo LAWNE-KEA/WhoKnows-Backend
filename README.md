@@ -1,14 +1,27 @@
 # Flask Variations
 
-# Merging:
+# A note about merging
 
-Use the `ours` merge strategy to merge the `main` branch into the `new-branch` branch. only update the `main` branch.
+Note the no-merge-readme strategy in `.gitattributes`:
 
-Merging into `main` branch example:
+```plaintext
+README.md merge=no-merge-readme
+```
+
+This is to prevent merge conflicts in the README.md file across branches. 
+
+In the `.git/config` file, you can add the following configuration:
+
+```plaintext
+[merge "no-merge-readme"]
+    name = "Do not merge README.md files"
+    driver = true
+```
+
+You can now merge normally:
 
 ```bash
-git checkout new-branch
-git merge -s ours main
+$ git merge <branch-name>
 ```
 
 ## How to get started
