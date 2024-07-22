@@ -2,12 +2,12 @@
 
 # Merging:
 
-Use the `ours` merge strategy to merge the `main` branch into the `new-branch` branch. only update the `main` branch.
+Use the `ours` merge strategy to merge the `main` branch into the `new_branch` branch. only update the `main` branch.
 
 Merging into `main` branch example:
 
 ```bash
-git checkout new-branch
+git checkout new_branch
 git merge -s ours main
 ```
 
@@ -21,7 +21,7 @@ One way to follow along is by:
 
 2. Cloning the repository to your local machine.
 
-3. Checking out the branch you are interested in (e.g. `git checkout <branch-name>`).
+3. Checking out the branch you are interested in (e.g. `git checkout <branch_name>`).
 
 4. Following the instructions in the README of the branch.
 
