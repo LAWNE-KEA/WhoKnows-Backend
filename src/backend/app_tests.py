@@ -3,7 +3,7 @@ import tempfile
 import app
 
 
-class MiniTwitTestCase(unittest.TestCase):
+class WhoKnowsTestCase(unittest.TestCase):
 
     def setUp(self):
         """Before each test, set up a blank database."""
@@ -49,7 +49,6 @@ class MiniTwitTestCase(unittest.TestCase):
         return self.app.get('/logout', follow_redirects=True)
 
     # testing functions
-
     def test_register(self):
         """Make sure registering works."""
         rv = self.register('user1', 'default')
