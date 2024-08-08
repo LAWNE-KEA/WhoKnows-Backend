@@ -2,7 +2,7 @@
 
 PYTHON_SCRIPT_PATH=$1
 
-TMP="This variable might become useful at some point." 
+TMP="This variable might become useful at some point. Otherwise delete it." 
 
 while true
 do
