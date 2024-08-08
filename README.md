@@ -1,15 +1,6 @@
 # Flask Variations
 
-# Merging:
-
-Use the `ours` merge strategy to merge the `main` branch into the `new_branch` branch. only update the `main` branch.
-
-Merging into `main` branch example:
-
-```bash
-git checkout new_branch
-git merge -s ours main
-```
+This is the Flask variations repository. It is not meant for production as it contains several security vulnerabilities and problematic parts on purpose. 
 
 ## How to get started
 
