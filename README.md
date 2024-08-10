@@ -1,6 +1,6 @@
-# Flask Variations
+# Whoknows Variations
 
-This is the Flask variations repository. It is not meant for production as it contains several security vulnerabilities and problematic parts on purpose. 
+This is the Whoknows variations repository. It is not meant for production as it contains several security vulnerabilities and problematic parts on purpose. 
 
 ## How to get started
 
