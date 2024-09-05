@@ -16,3 +16,9 @@ Env variables are in source code instead of as secrets.
 Some of the tests seem to be working incorrectly.
 md5 is not as safe as it was in 2009.
 Missing import in tests.
+
+Commit conventions, try to keep the format of:
+
+```
+<past_tense_verb> + <action>
+```
