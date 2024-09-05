@@ -22,3 +22,64 @@ Commit conventions, try to keep the format of:
 ```
 <past_tense_verb> + <action>
 ```
+
+# Conventions that we will follow 
+<table style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+      <th style="padding-bottom: 17px;">Concept/Context</th>
+      <th style="padding-bottom: 17px;">Convention</th>
+      <th style="padding-bottom: 17px;">Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Python Variables and Functions</strong></td>
+      <td style="padding-bottom: 17px;">Snake case</td>
+      <td style="padding-bottom: 17px;"><code>my_variable</code>, <code>my_function</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Database Tables/Collections</strong></td>
+      <td style="padding-bottom: 17px;">Plural</td>
+      <td style="padding-bottom: 17px;"><code>customers</code>, <code>orders</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Relational Database Naming</strong></td>
+      <td style="padding-bottom: 17px;">Snake case</td>
+      <td style="padding-bottom: 17px;"><code>customer_id</code>, <code>order_date</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>JavaScript Variables and Functions</strong></td>
+      <td style="padding-bottom: 17px;">Camel case</td>
+      <td style="padding-bottom: 17px;"><code>myVariable</code>, <code>myFunction</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>JavaScript Classes</strong></td>
+      <td style="padding-bottom: 17px;">Pascal case</td>
+      <td style="padding-bottom: 17px;"><code>MyClass</code>, <code>UserManager</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Web Framework Components</strong></td>
+      <td style="padding-bottom: 17px;">Pascal case</td>
+      <td style="padding-bottom: 17px;"><code>HeaderComponent</code>, <code>UserList</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>CSS Classes</strong></td>
+      <td style="padding-bottom: 17px;">Kebab case</td>
+      <td style="padding-bottom: 17px;"><code>.my-class</code>, <code>.user-profile</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Environment Variables</strong></td>
+      <td style="padding-bottom: 17px;">Upper snake case</td>
+      <td style="padding-bottom: 17px;"><code>DATABASE_URL</code>, <code>API_KEY</code></td>
+    </tr>
+    <tr>
+      <td style="padding-bottom: 17px;"><strong>Constants in Code</strong></td>
+      <td style="padding-bottom: 17px;">Upper snake case</td>
+      <td style="padding-bottom: 17px;"><code>MAX_SIZE</code>, <code>DEFAULT_COLOR</code></td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
