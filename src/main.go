@@ -12,7 +12,7 @@ import (
 var DATABASE_PATH = "./tmp/whoknows.db"
 
 
-// Run the server on port 8080
+// Run the server on port 8000
 func main() {
 	fmt.Println("Starting server on port 8000")
 
@@ -156,79 +156,79 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 }
 
 
-func getUserID(db *sql.DB, username string) (int, error) {
-    var id int
-    err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
-    if err != nil {
-        return 0, err
-    }
-    return id, nil
-}
+// func getUserID(db *sql.DB, username string) (int, error) {
+//     var id int
+//     err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
+//     if err != nil {
+//         return 0, err
+//     }
+//     return id, nil
+// }
 
-func apiLogin(w http.ResponseWriter, r *http.Request) {
-    db, err := sql.Open("sqlite3", DATABASE_PATH)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer db.Close()
+// func apiLogin(w http.ResponseWriter, r *http.Request) {
+//     db, err := sql.Open("sqlite3", DATABASE_PATH)
+//     if err != nil {
+//         log.Fatal(err)
+//     }
+//     defer db.Close()
 
-    var error string
-    username := r.FormValue("username")
-    password := r.FormValue("password")
+//     var error string
+//     username := r.FormValue("username")
+//     password := r.FormValue("password")
 
-    user, err := queryDB(db, "SELECT * FROM users WHERE username = ?", username)
-    if err != nil {
-        log.Fatal(err)
-    }
+//     user, err := queryDB(db, "SELECT * FROM users WHERE username = ?", username)
+//     if err != nil {
+//         log.Fatal(err)
+//     }
 
-    var storedPassword string
-    var userID int
-    err = user.Scan(&userID, &username, &storedPassword)
-    if err == sql.ErrNoRows {
-        error = "Invalid username"
-    } else if !verifyPassword(storedPassword, password) {
-        error = "Invalid password"
-    } else {
-        fmt.Fprintf(w, "Logged in successfully")
-        return
-    }
+//     var storedPassword string
+//     var userID int
+//     err = user.Scan(&userID, &username, &storedPassword)
+//     if err == sql.ErrNoRows {
+//         error = "Invalid username"
+//     } else if !verifyPassword(storedPassword, password) {
+//         error = "Invalid password"
+//     } else {
+//         fmt.Fprintf(w, "Logged in successfully")
+//         return
+//     }
 
-    w.WriteHeader(http.StatusUnauthorized)
-    json.NewEncoder(w).Encode(map[string]string{"error": error})
-}
+//     w.WriteHeader(http.StatusUnauthorized)
+//     json.NewEncoder(w).Encode(map[string]string{"error": error})
+// }
 
-func apiRegister(w http.ResponseWriter, r *http.Request) {
-    db, err := sql.Open("sqlite3", DATABASE_PATH)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer db.Close()
+// func apiRegister(w http.ResponseWriter, r *http.Request) {
+//     db, err := sql.Open("sqlite3", DATABASE_PATH)
+//     if err != nil {
+//         log.Fatal(err)
+//     }
+//     defer db.Close()
 
-    var error string
-    username := r.FormValue("username")
-    email := r.FormValue("email")
-    password := r.FormValue("password")
-    password2 := r.FormValue("password2")
+//     var error string
+//     username := r.FormValue("username")
+//     email := r.FormValue("email")
+//     password := r.FormValue("password")
+//     password2 := r.FormValue("password2")
 
-    if username == "" {
-        error = "You have to enter a username"
-    } else if email == "" || !strings.Contains(email, "@") {
-        error = "You have to enter a valid email address"
-    } else if password == "" {
-        error = "You have to enter a password"
-    } else if password != password2 {
-        error = "The two passwords do not match"
-    } else if _, err := getUserID(db, username); err == nil {
-        error = "The username is already taken"
-    } else {
-        _, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashPassword(password))
-        if err != nil {
-            log.Fatal(err)
-        }
-        fmt.Fprintf(w, "Registered successfully")
-        return
-    }
+//     if username == "" {
+//         error = "You have to enter a username"
+//     } else if email == "" || !strings.Contains(email, "@") {
+//         error = "You have to enter a valid email address"
+//     } else if password == "" {
+//         error = "You have to enter a password"
+//     } else if password != password2 {
+//         error = "The two passwords do not match"
+//     } else if _, err := getUserID(db, username); err == nil {
+//         error = "The username is already taken"
+//     } else {
+//         _, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashPassword(password))
+//         if err != nil {
+//             log.Fatal(err)
+//         }
+//         fmt.Fprintf(w, "Registered successfully")
+//         return
+//     }
 
-    w.WriteHeader(http.StatusBadRequest)
-    json.NewEncoder(w).Encode(map[string]string{"error": error})
-}
+//     w.WriteHeader(http.StatusBadRequest)
+//     json.NewEncoder(w).Encode(map[string]string{"error": error})
+// }
