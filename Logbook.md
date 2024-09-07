@@ -78,17 +78,44 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+    Vi havde som sådan ikke nogle problemer, men vi gjorde os nogle tanker om hvorfor at, det med at search var en POST metode i APIet, hvor vi tænkte at det var en mærkelig måde at gøre tingene på.
+
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        Consider, if this was a much larger project, how you would dismantle the legacy project and phase in the new:
+    Vi påtænker at gå single page repository, da vi tænker det kunne være bedst
+        
+    Vi påtænker at have en rewrite strategi, hvor vi tager små skridt først, og vi tænker over at vi skal commite og pushe lidt efter lidt, når vi har noget som fungerer. På den måde får vi produceret værdi hurtigt til kunden. Vi snakkede også om hvordan vi ville lave vores mappestruktur
+        
 
     3. Var der noget der gik godt?
 
+    -
+
     4. Var der noget der gik galt?
+
+    -
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+    Vi kan tænke over om det vi får leveret (i dette tilfælde fra Anders), har fejl i sig, og gøre op med os selv om vi skal acceptere det vi får eller lave det på den ”korrekte” måde.
+    
+    Vi læste at der i opgavebeskrivelsen stod at vi skulle holde os til den API specifikation, som vi blev bedt om at bruge.
+    
+    Vi besluttede os for at gøre som vi blev bedt om. Vi tænkte så at der ville komme et tidspunkt længere henne i forløbet hvor vi så skulle gøre det på den korrekte måde med GET.
+
+    Go.mod er lidt ligesom ens node modules tænkte vi.
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+    -
+
+    7. Hvad gjorde os DevOps?
+
+    -
+
+    8. Hvad gjorde os ikke DevOps?
+
+    -
 
 
 5. Torsdag den 12. september 2024
