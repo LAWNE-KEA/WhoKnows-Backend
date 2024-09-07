@@ -35,7 +35,7 @@
 
   function makeSearchRequest() {
     const query = searchInput.value;
-            const url = new URL(window.location.href);
+            const url = new URL("localhost:8000/api/search");
             url.searchParams.set('q', query);
             window.location.href = url.toString();
   }

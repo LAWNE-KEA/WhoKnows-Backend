@@ -27,20 +27,13 @@ app.secret_key = SECRET_KEY
 
 def connect_db(init_mode=False):
     """Returns a new connection to the database."""
-    if not init_mode:
-        check_db_exists()
+    if not init_mode and not check_db_exists():
+        print("Database not found.")
     return sqlite3.connect(DATABASE_PATH)
-
 
 def check_db_exists():
     """Checks if the database exists."""
-    db_exists = os.path.exists(DATABASE_PATH)
-    if not db_exists:
-        print ("Database not found")
-        sys.exit(1)
-    else:
-        return db_exists
-
+    return os.path.exists(DATABASE_PATH)
 
 def init_db():
     """Creates the database tables."""
@@ -48,7 +41,7 @@ def init_db():
         with app.open_resource('../schema.sql') as f:
             db.cursor().executescript(f.read().decode('utf-8'))
         db.commit()
-        print ("Initialized the database: ") + str(DATABASE_PATH)
+        print("Initialized the database:", DATABASE_PATH)
 
 
 def query_db(query, args=(), one=False):
@@ -138,58 +131,58 @@ def logout():
 # API Routes
 ################################################################################
 
-@app.route('/api/search')
-def api_search():
-    """API endpoint for search. Returns search results."""
-    q = request.args.get('q', None)
-    language = request.args.get('language', "en")
-    if not q:
-        search_results = []
-    else:
-        search_results = query_db("SELECT * FROM pages WHERE language = '%s' AND content LIKE '%%%s%%'" % (language, q))
+# @app.route('/api/search')
+# def api_search():
+#     """API endpoint for search. Returns search results."""
+#     q = request.args.get('q', None)
+#     language = request.args.get('language', "en")
+#     if not q:
+#         search_results = []
+#     else:
+#         search_results = query_db("SELECT * FROM pages WHERE language = '%s' AND content LIKE '%%%s%%'" % (language, q))
 
-    return jsonify(search_results=search_results)
-
-
-@app.route('/api/login', methods=['POST'])
-def api_login():
-    """Logs the user in."""
-    error = None
-    user = query_db("SELECT * FROM users WHERE username = '%s'" % request.form['username'], one=True)
-    if user is None:
-        error = 'Invalid username'
-    elif not verify_password(user['password'], request.form['password']):
-        error = 'Invalid password'
-    else:
-        flash('You were logged in')
-        session['user_id'] = user['id']
-        return redirect(url_for('search'))
-    return render_template('login.html', error=error)
+#     return jsonify(search_results=search_results)
 
 
-@app.route('/api/register', methods=['POST'])
-def api_register():
-    """Registers the user."""
-    if g.user:
-        return redirect(url_for('search'))
-    error = None
-    if not request.form['username']:
-        error = 'You have to enter a username'
-    elif not request.form['email'] or '@' not in request.form['email']:
-        error = 'You have to enter a valid email address'
-    elif not request.form['password']:
-        error = 'You have to enter a password'
-    elif request.form['password'] != request.form['password2']:
-        error = 'The two passwords do not match'
-    elif get_user_id(request.form['username']) is not None:
-        error = 'The username is already taken'
-    else:
-        g.db.execute("INSERT INTO users (username, email, password) values ('%s', '%s', '%s')" % 
-                     (request.form['username'], request.form['email'], hash_password(request.form['password'])))
-        g.db.commit()
-        flash('You were successfully registered and can login now')
-        return redirect(url_for('login'))
-    return render_template('register.html', error=error)
+# @app.route('/api/login', methods=['POST'])
+# def api_login():
+#     """Logs the user in."""
+#     error = None
+#     user = query_db("SELECT * FROM users WHERE username = '%s'" % request.form['username'], one=True)
+#     if user is None:
+#         error = 'Invalid username'
+#     elif not verify_password(user['password'], request.form['password']):
+#         error = 'Invalid password'
+#     else:
+#         flash('You were logged in')
+#         session['user_id'] = user['id']
+#         return redirect(url_for('search'))
+#     return render_template('login.html', error=error)
+
+
+# @app.route('/api/register', methods=['POST'])
+# def api_register():
+#     """Registers the user."""
+#     if g.user:
+#         return redirect(url_for('search'))
+#     error = None
+#     if not request.form['username']:
+#         error = 'You have to enter a username'
+#     elif not request.form['email'] or '@' not in request.form['email']:
+#         error = 'You have to enter a valid email address'
+#     elif not request.form['password']:
+#         error = 'You have to enter a password'
+#     elif request.form['password'] != request.form['password2']:
+#         error = 'The two passwords do not match'
+#     elif get_user_id(request.form['username']) is not None:
+#         error = 'The username is already taken'
+#     else:
+#         g.db.execute("INSERT INTO users (username, email, password) values ('%s', '%s', '%s')" % 
+#                      (request.form['username'], request.form['email'], hash_password(request.form['password'])))
+#         g.db.commit()
+#         flash('You were successfully registered and can login now')
+#         return redirect(url_for('login'))
+#     return render_template('register.html', error=error)
 
 
 ################################################################################
