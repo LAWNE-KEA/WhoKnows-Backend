@@ -9,6 +9,8 @@ import (
 	"log"
 )
 
+var DATABASE_PATH = "./tmp/whoknows.db"
+
 
 // Run the server on port 8080
 func main() {
@@ -20,55 +22,41 @@ func main() {
 		fmt.Fprintf(w, "Hello, World!")
 	})
 
-
-	http.HandleFunc("/api/users", func(w http.ResponseWriter, r *http.Request) {
-		db, err := sql.Open("sqlite3", DATABASE_PATH)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
-
-		rows, err := queryDB(db, "SELECT * FROM users")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Fprintf(w, "Test data: %v", rows)
-
-	})
-
-
-	http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
-		db, err := sql.Open("sqlite3", DATABASE_PATH)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer db.Close()
+// GET VERSION
+	// http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
+	// 	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	defer db.Close()
 		
-		query := r.URL.Query().Get("q")
-		if query == "" {
-			http.Error(w, "Missing query parameter 'q'", http.StatusBadRequest)
-			return
-		}
+	// 	query := r.URL.Query().Get("q")
+	// 	if query == "" {
+	// 		http.Error(w, "Missing query parameter 'q'", http.StatusBadRequest)
+	// 		return
+	// 	}
 
-        language := r.URL.Query().Get("language")
-        if language == "" {
-            language = "en"
-        }
+    //     language := r.URL.Query().Get("language")
+    //     if language == "" {
+    //         language = "en"
+    //     }
 
-		rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
-		if err != nil {
-			log.Fatal(err)
-		}
+	// 	rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
 		
-		fmt.Fprintf(w, "Search results: %v", rows)
-	})
+	// 	fmt.Fprintf(w, "Search results: %v", rows)
+	// })
+
+// POST VERSION
+    http.HandleFunc("/api/search", searchHandler)
+    
 
 
 	http.ListenAndServe(":8000", nil)
 }
 
-var DATABASE_PATH = "./tmp/whoknows.db"
 
 func initDB() {
     db, err := sql.Open("sqlite3", DATABASE_PATH)
@@ -90,8 +78,40 @@ func initDB() {
     fmt.Println("Initialized the database:", DATABASE_PATH)
 }
 
+func searchHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+        return
+    }
+    
+    db, err := sql.Open("sqlite3", DATABASE_PATH)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    query := r.FormValue("q")
+    if query == "" {
+        http.Error(w, "Missing query parameter 'q'", http.StatusBadRequest)
+        return
+    }
+
+    language := r.FormValue("language")
+    if language == "" {
+        language = "en"
+    }
+
+    rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Fprintf(w, "Search results: %v", rows)
+}
+
 func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interface{}, error) {
     rows, err := db.Query(query, args...)
+    fmt.Println("Query:", query, "Args:", args)
     if err != nil {
         return nil, err
     }
@@ -133,4 +153,82 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
     }
 
     return result, nil
+}
+
+
+func getUserID(db *sql.DB, username string) (int, error) {
+    var id int
+    err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
+    if err != nil {
+        return 0, err
+    }
+    return id, nil
+}
+
+func apiLogin(w http.ResponseWriter, r *http.Request) {
+    db, err := sql.Open("sqlite3", DATABASE_PATH)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    var error string
+    username := r.FormValue("username")
+    password := r.FormValue("password")
+
+    user, err := queryDB(db, "SELECT * FROM users WHERE username = ?", username)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    var storedPassword string
+    var userID int
+    err = user.Scan(&userID, &username, &storedPassword)
+    if err == sql.ErrNoRows {
+        error = "Invalid username"
+    } else if !verifyPassword(storedPassword, password) {
+        error = "Invalid password"
+    } else {
+        fmt.Fprintf(w, "Logged in successfully")
+        return
+    }
+
+    w.WriteHeader(http.StatusUnauthorized)
+    json.NewEncoder(w).Encode(map[string]string{"error": error})
+}
+
+func apiRegister(w http.ResponseWriter, r *http.Request) {
+    db, err := sql.Open("sqlite3", DATABASE_PATH)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    var error string
+    username := r.FormValue("username")
+    email := r.FormValue("email")
+    password := r.FormValue("password")
+    password2 := r.FormValue("password2")
+
+    if username == "" {
+        error = "You have to enter a username"
+    } else if email == "" || !strings.Contains(email, "@") {
+        error = "You have to enter a valid email address"
+    } else if password == "" {
+        error = "You have to enter a password"
+    } else if password != password2 {
+        error = "The two passwords do not match"
+    } else if _, err := getUserID(db, username); err == nil {
+        error = "The username is already taken"
+    } else {
+        _, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashPassword(password))
+        if err != nil {
+            log.Fatal(err)
+        }
+        fmt.Fprintf(w, "Registered successfully")
+        return
+    }
+
+    w.WriteHeader(http.StatusBadRequest)
+    json.NewEncoder(w).Encode(map[string]string{"error": error})
 }
