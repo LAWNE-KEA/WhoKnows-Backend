@@ -51,7 +51,12 @@ func main() {
 			return
 		}
 
-		rows, err := queryDB(db, "SELECT * FROM pages WHERE content LIKE %?%")
+        language := r.URL.Query().Get("language")
+        if language == "" {
+            language = "en"
+        }
+
+		rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
 		if err != nil {
 			log.Fatal(err)
 		}
