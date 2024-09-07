@@ -48,7 +48,7 @@ def init_db():
         with app.open_resource('../schema.sql') as f:
             db.cursor().executescript(f.read().decode('utf-8'))
         db.commit()
-        print ("Initialized the database: ") + str(DATABASE_PATH)
+        print ("Initialized the database: ", DATABASE_PATH)
 
 
 def query_db(query, args=(), one=False):
