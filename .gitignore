@@ -188,4 +188,8 @@ cython_debug/
 # Go workspace file
 go.work
 
+# macOS system files
+.DS_Store
+
+
 # End of https://www.toptal.com/developers/gitignore/api/go
