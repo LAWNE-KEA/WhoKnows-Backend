@@ -5,8 +5,11 @@ import (
 	"net/http"
 	"database/sql"
 	_"github.com/mattn/go-sqlite3"
-	"io/ioutil"
-	"log"
+    "io/ioutil"
+    "log"
+    "encoding/json"
+    "crypto/md5"
+    "encoding/hex"
 )
 
 var DATABASE_PATH = "./tmp/whoknows.db"
@@ -24,7 +27,7 @@ func main() {
 
     http.HandleFunc("/api/search", searchHandler)
     
-
+    http.HandleFunc("/api/login", loginHandler)
 
 	http.ListenAndServe(":8000", nil)
 }
@@ -123,6 +126,61 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
     return result, nil
 }
 
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	if err != nil {
+		http.Error(w, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	if username == "" || password == "" {
+		http.Error(w, "Missing username or password", http.StatusBadRequest)
+		return
+	}
+
+	var user struct {
+		ID       int
+		Username string
+		Password string
+	}
+
+	err = db.QueryRow("SELECT id, username, password FROM users WHERE username = ?", username).Scan(&user.ID, &user.Username, &user.Password)
+	if err == sql.ErrNoRows {
+		http.Error(w, "Invalid username", http.StatusUnauthorized)
+		return
+	} else if err != nil {
+		http.Error(w, "Database query error", http.StatusInternalServerError)
+		return
+	}
+
+	if !verifyPassword(user.Password, password) {
+		http.Error(w, "Invalid password", http.StatusUnauthorized)
+		return
+	}
+    
+	// Here you would typically create a session or generate a token
+	// For this example, we'll just return a success message
+    // Generate a simple token for demonstration purposes
+    token := fmt.Sprintf("token-%d", user.ID)
+    w.Header().Set("Authorization", token)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Logged in successfully", "user_id": string(user.ID)})
+}
+
+func verifyPassword(storedHash, password string) bool {
+        hash := md5.Sum([]byte(password))
+        return storedHash == hex.EncodeToString(hash[:])
+    }
 
 // func getUserID(db *sql.DB, username string) (int, error) {
 //     var id int
