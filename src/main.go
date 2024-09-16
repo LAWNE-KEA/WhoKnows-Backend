@@ -128,10 +128,6 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
 
 	db, err := sql.Open("sqlite3", DATABASE_PATH)
 	if err != nil {
