@@ -8,6 +8,8 @@ import (
     "io/ioutil"
     "log"
     "encoding/json"
+    "crypto/md5"
+    "encoding/hex"
 )
 
 var DATABASE_PATH = "./tmp/whoknows.db"
@@ -53,7 +55,7 @@ func main() {
 // POST VERSION
     http.HandleFunc("/api/search", searchHandler)
     
-
+    http.HandleFunc("/api/login", loginHandler)
 
 	http.ListenAndServe(":8000", nil)
 }
@@ -156,6 +158,7 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
     return result, nil
 }
 
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
@@ -207,10 +210,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func verifyPassword(storedHash, password string) bool {
-	// Implement password verification logic here
-	// For now, we'll just do a simple comparison
-	return storedHash == password
-}
+        hash := md5.Sum([]byte(password))
+        return storedHash == hex.EncodeToString(hash[:])
+    }
+
 // func getUserID(db *sql.DB, username string) (int, error) {
 //     var id int
 //     err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
