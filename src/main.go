@@ -22,34 +22,6 @@ func main() {
 		fmt.Fprintf(w, "Hello, World!")
 	})
 
-// GET VERSION
-	// http.HandleFunc("/api/search", func(w http.ResponseWriter, r *http.Request) {
-	// 	db, err := sql.Open("sqlite3", DATABASE_PATH)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	defer db.Close()
-		
-	// 	query := r.URL.Query().Get("q")
-	// 	if query == "" {
-	// 		http.Error(w, "Missing query parameter 'q'", http.StatusBadRequest)
-	// 		return
-	// 	}
-
-    //     language := r.URL.Query().Get("language")
-    //     if language == "" {
-    //         language = "en"
-    //     }
-
-	// 	rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-		
-	// 	fmt.Fprintf(w, "Search results: %v", rows)
-	// })
-
-// POST VERSION
     http.HandleFunc("/api/search", searchHandler)
     
 
@@ -79,11 +51,7 @@ func initDB() {
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodPost {
-        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-        return
-    }
-    
+  
     db, err := sql.Open("sqlite3", DATABASE_PATH)
     if err != nil {
         log.Fatal(err)
