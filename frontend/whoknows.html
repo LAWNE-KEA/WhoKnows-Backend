@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¿Who Knows?</title>
+  <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body>
+  <div class="page">
+    <div class="navigation">
+      <nav>
+        <h1><a id="nav-logo">¿Who Knows?</a></h1>
+        <a id="nav-login" href="#" onclick="toggleLoginVisible()">Log in</a>
+        <a id="nav-register" href="#">Register</a>
+      </nav>
+    </div>
+    <ul class="flashes" style="display: none;"></ul>
+    <div class="body">
+      <div>
+        <input id="search-input" placeholder="Search..." value=""/>
+        <button onclick="makeSearchRequest()">Search</button>
+      </div>
+      <div id="results"></div>
+    </div>
+    <div class="footer">
+      <span>¿Who Knows? &copy; 2009</span>
+      <a href="#">About</a>
+    </div>
+  </div>
+
+    <div style="display: none;">
+        <h2>Log In</h2>
+        <div id="error" class="error" style="display: none;"></div>
+        <form id="loginForm">
+            <dl>
+                <dt>Username:</dt>
+                <dd><input type="text" name="username" id="username" size="30"></dd>
+                <dt>Password:</dt>
+                <dd><input type="password" name="password" id="password" size="30"></dd>
+            </dl>
+            <div class="actions"><input type="submit" value="Log In"></div>
+        </form>
+    </div>  
+
+  <script>
+    let searchInput;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      searchInput = document.getElementById("search-input");
+
+      // Focus the input field
+      searchInput.focus();
+
+      // Search when the user presses Enter
+      searchInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          makeSearchRequest();
+        }
+      });
+    });
+
+    function toggleLoginVisible() {
+      const loginForm = document.getElementById('loginForm');
+      loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function makeSearchRequest() {
+      const query = searchInput.value;
+      const url = new URL(`http://localhost:8080/api/search`);
+      url.searchParams.set('q', query);
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const resultsDiv = document.getElementById('results');
+          resultsDiv.innerHTML = '';
+          data.forEach(result => {
+            const resultDiv = document.createElement('div');
+            resultDiv.innerHTML = `
+              <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
+            `;
+            resultsDiv.appendChild(resultDiv);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('error').innerText = `Error: ${data.error}`;
+                    document.getElementById('error').style.display = 'block';
+                } else {
+                    // Handle successful login
+                    window.location.href = '/dashboard'; // Redirect to dashboard or another page
+                }
+            })
+            .catch(error => {
+                document.getElementById('error').innerText = `Error: ${error.message}`;
+                document.getElementById('error').style.display = 'block';
+            });
+        });
+
+  </script>
+</body>
+</html>

@@ -18,7 +18,7 @@ var DATABASE_PATH = "./tmp/whoknows.db"
 
 // Run the server on port 8000
 func main() {
-	fmt.Println("Starting server on port 8000")
+	fmt.Println("Starting server on port 8080")
 
 	initDB()
 
@@ -33,7 +33,11 @@ func main() {
     http.HandleFunc("/api/register", apiRegister)
 
 
-	http.ListenAndServe(":8000", nil)
+	http.ListenAndServe(":8080", nil)
+}
+
+func enableCors(w *http.ResponseWriter) {
+    (*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 
@@ -58,7 +62,7 @@ func initDB() {
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-  
+    enableCors(&w)
     db, err := sql.Open("sqlite3", DATABASE_PATH)
     if err != nil {
         log.Fatal(err)
@@ -81,7 +85,7 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
         log.Fatal(err)
     }
 
-    fmt.Fprintf(w, "Search results: %v", rows)
+    json.NewEncoder(w).Encode(rows)
 }
 
 func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interface{}, error) {
