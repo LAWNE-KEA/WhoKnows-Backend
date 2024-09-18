@@ -53,7 +53,7 @@ nav h1, nav a {
     margin-right: 20px;
 }
 
-#nav-login, #nav-register, #nav-logout {
+#nav-login, #nav-register, #nav-logout, #nav-search{
     float: right;
 }
 

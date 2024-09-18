@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="static/style.css">
 </head>
 <body>
-  <div class="page">
+  <div id="page" class="page" style="display: block;">
     <div class="navigation">
       <nav>
         <h1><a id="nav-logo">¿Who Knows?</a></h1>
@@ -17,19 +17,11 @@
     </div>
     <ul class="flashes" style="display: none;"></ul>
     <div class="body">
-      <div>
+      <div id="search-container">
         <input id="search-input" placeholder="Search..." value=""/>
         <button onclick="makeSearchRequest()">Search</button>
       </div>
-      <div id="results"></div>
-    </div>
-    <div class="footer">
-      <span>¿Who Knows? &copy; 2009</span>
-      <a href="#">About</a>
-    </div>
-  </div>
-
-    <div style="display: none;">
+      <div id="login-container" style="display: none;">
         <h2>Log In</h2>
         <div id="error" class="error" style="display: none;"></div>
         <form id="loginForm">
@@ -41,7 +33,16 @@
             </dl>
             <div class="actions"><input type="submit" value="Log In"></div>
         </form>
-    </div>  
+    </div> 
+      <div id="results"></div>
+    </div>
+    <div class="footer">
+      <span>¿Who Knows? &copy; 2009</span>
+      <a href="#">About</a>
+    </div>
+  </div>
+
+ 
 
   <script>
     let searchInput;
@@ -61,8 +62,10 @@
     });
 
     function toggleLoginVisible() {
-      const loginForm = document.getElementById('loginForm');
-      loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+      document.getElementById('results').innerHTML = '';
+      document.getElementById('login-container').style.display = document.getElementById('login-container').style.display === 'none' ? 'block' : 'none';
+      document.getElementById('search-container').style.display = document.getElementById('search-container').style.display === 'none' ? 'block' : 'none';
+      document.getElementById('nav-login').innerText = document.getElementById('nav-login').innerText === 'Log in' ? 'Search' : 'Log in';
     }
 
     function makeSearchRequest() {
@@ -86,15 +89,22 @@
         .catch(error => console.error('Error:', error));
     }
 
+    function loginSuccess(sessionId) {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('search-container').style.display = 'block';
+      document.getElementById('nav-login').innerText = 'Search';
+      localStorage.setItem('sessionId', '');
+    }
+
     document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            fetch('/api/login', {
+            fetch('http://localhost:8080/api/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 },
                 body: JSON.stringify({ username, password })
             })
@@ -105,7 +115,7 @@
                     document.getElementById('error').style.display = 'block';
                 } else {
                     // Handle successful login
-                    window.location.href = '/dashboard'; // Redirect to dashboard or another page
+                    loginSuccess();
                 }
             })
             .catch(error => {

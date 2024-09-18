@@ -11,16 +11,27 @@ import (
     "crypto/md5"
     "encoding/hex"
     "strings"
+    "github.com/google/uuid"
+    "time"
 )
 
 var DATABASE_PATH = "./tmp/whoknows.db"
 
+
+var sessionStore = map[string]session{}
+
+type session struct {
+    userName string
+    expiry time.Time
+}
 
 // Run the server on port 8000
 func main() {
 	fmt.Println("Starting server on port 8080")
 
 	initDB()
+
+    
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello, World!")
@@ -135,7 +146,17 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+    enableCors(&w)
 
+    if r.Method != http.MethodPost {
+        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+        return
+    }
+
+
+    if (*r).Method == "OPTIONS" {
+        return
+    }
 	db, err := sql.Open("sqlite3", DATABASE_PATH)
 	if err != nil {
 		http.Error(w, "Database connection error", http.StatusInternalServerError)
@@ -171,13 +192,14 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
     
-	// Here you would typically create a session or generate a token
-	// For this example, we'll just return a success message
-    // Generate a simple token for demonstration purposes
-    token := fmt.Sprintf("token-%d", user.ID)
-    w.Header().Set("Authorization", token)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{"message": "Logged in successfully", "user_id": string(user.ID)})
+    sessionID := uuid.New().String()
+    sessionStore[sessionID] = session{userName: username, expiry: time.Now().Add(24 * time.Hour)}
+    http.SetCookie(w, &http.Cookie{
+        Name: "session_id",
+        Value: sessionID,
+        Expires: time.Now().Add(24 * time.Hour),
+    })
+    json.NewEncoder(w).Encode(map[string]string{"statusCode": "200", "message": "Logged in successfully"})
 }
 
 func verifyPassword(storedHash, password string) bool {
@@ -200,6 +222,7 @@ func hashPassword(password string) string {
 }
 
 func apiRegister(w http.ResponseWriter, r *http.Request) {
+    enableCors(&w)
     if r.Method != http.MethodPost {
         http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
         return
