@@ -70,7 +70,7 @@
 
     function makeSearchRequest() {
       const query = searchInput.value;
-      const url = new URL(`http://localhost:8080/api/search`);
+      const url = new URL(`http://ec2-16-171-159-57.eu-north-1.compute.amazonaws.com/api/search`);
       url.searchParams.set('q', query);
 
       fetch(url)
