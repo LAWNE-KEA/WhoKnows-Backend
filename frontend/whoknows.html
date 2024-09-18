@@ -1,129 +1,243 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>¿Who Knows?</title>
-  <link rel="stylesheet" type="text/css" href="static/style.css">
-</head>
-<body>
-  <div id="page" class="page" style="display: block;">
-    <div class="navigation">
-      <nav>
-        <h1><a id="nav-logo">¿Who Knows?</a></h1>
-        <a id="nav-login" href="#" onclick="toggleLoginVisible()">Log in</a>
-        <a id="nav-register" href="#">Register</a>
-      </nav>
-    </div>
-    <ul class="flashes" style="display: none;"></ul>
-    <div class="body">
-      <div id="search-container">
-        <input id="search-input" placeholder="Search..." value=""/>
-        <button onclick="makeSearchRequest()">Search</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Who Knows?</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="navigation">
+        <nav>
+          <h1><a id="nav-logo" href="/">¿Who Knows?</a></h1>
+          <a id="nav-login" href="#" onclick="toggleView('login-container')"
+            >Log in</a
+          >
+          <a
+            id="nav-register"
+            href="#"
+            onclick="toggleView('register-container')"
+            >Register</a
+          >
+          <a id="nav-logout" href="#" onclick="logout()" style="display: none"
+            >Log out</a
+          >
+        </nav>
       </div>
-      <div id="login-container" style="display: none;">
-        <h2>Log In</h2>
-        <div id="error" class="error" style="display: none;"></div>
-        <form id="loginForm">
+      <ul id="flashes" class="flashes" style="display: none"></ul>
+      <div class="body">
+        <div id="search-container">
+          <input id="search-input" placeholder="Search..." value="" />
+          <button onclick="makeSearchRequest()">Search</button>
+        </div>
+        <div id="login-container" style="display: none">
+          <h2>Log In</h2>
+          <div id="login-error" class="error" style="display: none"></div>
+          <form id="loginForm">
             <dl>
-                <dt>Username:</dt>
-                <dd><input type="text" name="username" id="username" size="30"></dd>
-                <dt>Password:</dt>
-                <dd><input type="password" name="password" id="password" size="30"></dd>
+              <dt>Username:</dt>
+              <dd>
+                <input type="text" name="username" id="username" size="30" />
+              </dd>
+              <dt>Password:</dt>
+              <dd>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  size="30"
+                />
+              </dd>
             </dl>
-            <div class="actions"><input type="submit" value="Log In"></div>
-        </form>
-    </div> 
-      <div id="results"></div>
+            <div class="actions"><input type="submit" value="Log In" /></div>
+          </form>
+        </div>
+        <div id="register-container" style="display: none">
+          <h2>Register</h2>
+          <div id="register-error" class="error" style="display: none"></div>
+          <form id="registerForm">
+            <dl>
+              <dt>Username:</dt>
+              <dd>
+                <input
+                  type="text"
+                  name="username"
+                  id="reg-username"
+                  size="30"
+                />
+              </dd>
+              <dt>Email:</dt>
+              <dd>
+                <input type="email" name="email" id="reg-email" size="30" />
+              </dd>
+              <dt>Password:</dt>
+              <dd>
+                <input
+                  type="password"
+                  name="password"
+                  id="reg-password"
+                  size="30"
+                />
+              </dd>
+              <dt>Confirm Password:</dt>
+              <dd>
+                <input
+                  type="password"
+                  name="password2"
+                  id="reg-password2"
+                  size="30"
+                />
+              </dd>
+            </dl>
+            <div class="actions"><input type="submit" value="Register" /></div>
+          </form>
+        </div>
+        <div id="results"></div>
+        <div id="about" style="display: none">
+          <h1>Our mission</h1>
+          <p>We intend to build the world's best search engine!</p>
+          <h2>Our team</h2>
+          <img
+            src="/static/monkgroup.png"
+            alt="monk group our team"
+            style="height: 50vh"
+          />
+        </div>
+      </div>
+      <div class="footer">
+        <span>¿Who Knows? &copy; 2009</span>
+        <a href="#" onclick="toggleView('about')">About</a>
+      </div>
     </div>
-    <div class="footer">
-      <span>¿Who Knows? &copy; 2009</span>
-      <a href="#">About</a>
-    </div>
-  </div>
 
- 
+    <script>
+      const API_BASE_URL = "http://localhost:8080/api";
 
-  <script>
-    let searchInput;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      searchInput = document.getElementById("search-input");
-
-      // Focus the input field
-      searchInput.focus();
-
-      // Search when the user presses Enter
-      searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-          makeSearchRequest();
-        }
-      });
-    });
-
-    function toggleLoginVisible() {
-      document.getElementById('results').innerHTML = '';
-      document.getElementById('login-container').style.display = document.getElementById('login-container').style.display === 'none' ? 'block' : 'none';
-      document.getElementById('search-container').style.display = document.getElementById('search-container').style.display === 'none' ? 'block' : 'none';
-      document.getElementById('nav-login').innerText = document.getElementById('nav-login').innerText === 'Log in' ? 'Search' : 'Log in';
-    }
-
-    function makeSearchRequest() {
-      const query = searchInput.value;
-      const url = new URL(`http://localhost:8080/api/search`);
-      url.searchParams.set('q', query);
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const resultsDiv = document.getElementById('results');
-          resultsDiv.innerHTML = '';
-          data.forEach(result => {
-            const resultDiv = document.createElement('div');
-            resultDiv.innerHTML = `
-              <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
-            `;
-            resultsDiv.appendChild(resultDiv);
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .getElementById("search-input")
+          .addEventListener("keypress", (event) => {
+            if (event.key === "Enter") makeSearchRequest();
           });
-        })
-        .catch(error => console.error('Error:', error));
-    }
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", handleLogin);
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", handleRegister);
+        checkSession();
+      });
 
-    function loginSuccess(sessionId) {
-      document.getElementById('login-container').style.display = 'none';
-      document.getElementById('search-container').style.display = 'block';
-      document.getElementById('nav-login').innerText = 'Search';
-      localStorage.setItem('sessionId', '');
-    }
-
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            fetch('http://localhost:8080/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                body: JSON.stringify({ username, password })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('error').innerText = `Error: ${data.error}`;
-                    document.getElementById('error').style.display = 'block';
-                } else {
-                    // Handle successful login
-                    loginSuccess();
-                }
-            })
-            .catch(error => {
-                document.getElementById('error').innerText = `Error: ${error.message}`;
-                document.getElementById('error').style.display = 'block';
-            });
+      function toggleView(containerId) {
+        const containers = [
+          "search-container",
+          "login-container",
+          "register-container",
+          "about",
+        ];
+        containers.forEach((id) => {
+          document.getElementById(id).style.display =
+            id === containerId ? "block" : "none";
         });
+        document.getElementById("results").innerHTML = "";
+      }
 
-  </script>
-</body>
+      function makeSearchRequest() {
+        const query = document.getElementById("search-input").value;
+        fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = data
+              .map(
+                (result) =>
+                  `<h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>`
+              )
+              .join("");
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function handleLogin(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        fetch(`${API_BASE_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: `username=${encodeURIComponent(
+            username
+          )}&password=${encodeURIComponent(password)}`,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              showError("login-error", data.error);
+            } else {
+              loginSuccess(username);
+            }
+          })
+          .catch((error) => showError("login-error", error.message));
+      }
+
+      function handleRegister(event) {
+        event.preventDefault();
+        const formData = new FormData(document.getElementById("registerForm"));
+
+        fetch(`${API_BASE_URL}/register`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              showError("register-error", data.error);
+            } else {
+              loginSuccess(formData.get("username"));
+            }
+          })
+          .catch((error) => showError("register-error", error.message));
+      }
+
+      function loginSuccess(username) {
+        document.getElementById("nav-login").style.display = "none";
+        document.getElementById("nav-register").style.display = "none";
+        document.getElementById("nav-logout").style.display = "inline";
+        document.getElementById(
+          "nav-logout"
+        ).innerText = `Log out [${username}]`;
+        toggleView("search-container");
+      }
+
+      function logout() {
+        fetch(`${API_BASE_URL}/logout`, { method: "POST" })
+          .then(() => {
+            document.getElementById("nav-login").style.display = "inline";
+            document.getElementById("nav-register").style.display = "inline";
+            document.getElementById("nav-logout").style.display = "none";
+            toggleView("search-container");
+          })
+          .catch((error) => console.error("Logout error:", error));
+      }
+
+      function checkSession() {
+        fetch(`${API_BASE_URL}/check_session`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.username) {
+              loginSuccess(data.username);
+            }
+          })
+          .catch((error) => console.error("Session check error:", error));
+      }
+
+      function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.innerText = `Error: ${message}`;
+        errorElement.style.display = "block";
+      }
+    </script>
+  </body>
 </html>

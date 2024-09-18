@@ -13,6 +13,8 @@ import (
     "strings"
     "github.com/google/uuid"
     "time"
+    "path/filepath"
+    "os"
 )
 
 var DATABASE_PATH = "./tmp/whoknows.db"
@@ -27,15 +29,24 @@ type session struct {
 
 // Run the server on port 8000
 func main() {
+    // Get the current working directory
+    cwd, err := os.Getwd()
+    if err != nil {
+        fmt.Println("Error:", err)
+        return
+    }
+
+    // Print the current working directory
+    fmt.Println("Current working directory:", cwd)
+
+
 	fmt.Println("Starting server on port 8080")
 
 	initDB()
 
     
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
-	})
+	http.HandleFunc("/", serveIndexPage)
 
     http.HandleFunc("/api/search", searchHandler)
     
@@ -43,6 +54,9 @@ func main() {
 
     http.HandleFunc("/api/register", apiRegister)
 
+    // Serve static files
+	fs := http.FileServer(http.Dir("./frontend"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.ListenAndServe(":8080", nil)
 }
@@ -262,4 +276,38 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
 
     w.WriteHeader(http.StatusBadRequest)
     json.NewEncoder(w).Encode(map[string]string{"error": error})
+}
+
+func serveIndexPage(w http.ResponseWriter, r *http.Request) {
+    if r.URL.Path != "/" {
+        http.NotFound(w, r)
+        return
+    }
+    
+    // Get the current working directory
+    cwd, err := os.Getwd()
+    if err != nil {
+        http.Error(w, "Server error", http.StatusInternalServerError)
+        return
+    }
+
+    // Print the current working directory for debugging
+    fmt.Println("Current working directory:", cwd)
+
+    // Construct the path to the HTML file
+    filePath := filepath.Join(cwd, "..", "frontend", "whoknows.html")
+    
+    // Print the file path for debugging
+    fmt.Println("Constructed file path:", filePath)
+
+    // Check if the file exists
+    if _, err := os.Stat(filePath); os.IsNotExist(err) {
+        // Print an error message for debugging
+        fmt.Println("File not found:", filePath)
+        http.Error(w, "File not found", http.StatusNotFound)
+        return
+    }
+
+    // Serve the file
+    http.ServeFile(w, r, filePath)
 }
