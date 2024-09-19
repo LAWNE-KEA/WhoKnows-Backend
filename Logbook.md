@@ -78,22 +78,22 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-    Vi havde som sådan ikke nogle problemer, men vi gjorde os nogle tanker om hvorfor at, det med at search var en POST metode i APIet, hvor vi tænkte at det var en mærkelig måde at gøre tingene på.
+        Vi havde som sådan ikke nogle problemer, men vi gjorde os nogle tanker om hvorfor at, det med at search var en POST metode i APIet, hvor vi tænkte at det var en mærkelig måde at gøre tingene på.
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-    Vi påtænker at gå single page repository, da vi tænker det kunne være bedst
+        Vi påtænker at gå single page repository, da vi tænker det kunne være bedst
         
-    Vi påtænker at have en rewrite strategi, hvor vi tager små skridt først, og vi tænker over at vi skal commite og pushe lidt efter lidt, når vi har noget som fungerer. På den måde får vi produceret værdi hurtigt til kunden. Vi snakkede også om hvordan vi ville lave vores mappestruktur
+        Vi påtænker at have en rewrite strategi, hvor vi tager små skridt først, og vi tænker over at vi skal commite og pushe lidt efter lidt, når vi har noget som fungerer. På den måde får vi produceret værdi hurtigt til kunden. Vi snakkede også om hvordan vi ville lave vores mappestruktur
         
 
     3. Var der noget der gik godt?
 
-    -
+        -
 
     4. Var der noget der gik galt?
 
-    -
+        -
 
     5. Var der nogle ting som vi fandt læringsrige?
 
@@ -122,27 +122,46 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        -
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        -
 
     3. Var der noget der gik godt?
 
+        -
+
     4. Var der noget der gik galt?
+
+        -
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+        -
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+        -
 
 6. Torsdag den 19. september 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        Det var kun Nikolaj som var her, da William skulle til lægen
+
     2. Havde vi gjort os nogle overvejelser om noget?
 
     3. Var der noget der gik godt?
 
     4. Var der noget der gik galt?
 
+        Vores frontend app er deployet på Versel, men det er forbudt sagde Anders
+
     5. Var der nogle ting som vi fandt læringsrige?
+
+        Det var læringsrigt at man kunne køre npx linting i sin kode, så når man nu er i et automatiseret miljø, bliver man stoppet
+        når man prøver at committe sin kode.
 
     6. Evt. spørgsmål som vi stillede os selv?
 
