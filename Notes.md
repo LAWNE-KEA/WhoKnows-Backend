@@ -94,6 +94,11 @@ Do you agree with the findings?
   
 Which ones did you fix?
 
+<img width="879" alt="Skærmbillede 2024-09-25 kl  16 33 53" src="https://github.com/user-attachments/assets/c3235994-0a84-4c51-811f-f688dff4088e">
+
+<img width="708" alt="Skærmbillede 2024-09-25 kl  16 34 00" src="https://github.com/user-attachments/assets/6ae46597-0231-4a9e-ba1a-17d065d4e275">
+
+
   We fixed none of them due to the fact that we wanted to experience bigger conflicts, in order to put it into perspective if it was indeed worth giving our time into these small issues.
 
 Which ones did you ignore?
