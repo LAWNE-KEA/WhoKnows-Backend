@@ -41,11 +41,15 @@ jobs:
             scp -o StrictHostKeyChecking=no -r ./backend/myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:/home/${{ secrets.AZURE_VM_USER }}/myapp_temp
 
       # Step 6: SSH into Azure VM and restart the application
-      - name: Restart application on Azure VM
+      - name: Stop existing application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
-          sudo systemctl stop myapp.service || true  # Stop existing service if it exists
-          sudo mv /home/${{ secrets.AZURE_VM_USER }}/myapp_temp /usr/local/bin/myapp  # Move binary to final directory
-          sudo chmod +x /usr/local/bin/myapp  # Ensure it's executable
-          sudo systemctl start myapp.service  # Start or restart the app
-          EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl stop myapp.service || true"
+
+      - name: Move binary and set permissions
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo mv /home/${{ secrets.AZURE_VM_USER }}/myapp_temp /usr/local/bin/myapp"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo chmod +x /usr/local/bin/myapp"
+
+      - name: Start the application
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl start myapp.service"
