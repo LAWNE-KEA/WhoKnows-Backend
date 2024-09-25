@@ -119,4 +119,4 @@ Consider whether you want to ensure linting before anyone can push their code or
 
 #GitHub Badge for GitHub Actions
 
-![<TEXT ON SHIELD>](https://github.com/<ORGANIZATION>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)
+![<TEXT ON SHIELD>](https://github.com/<LAWNE-KEA>/<WhoKnows-Backend>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)
