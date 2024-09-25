@@ -78,11 +78,6 @@ Commit conventions, try to keep the format of:
       <td style="padding-bottom: 17px;">Upper snake case</td>
       <td style="padding-bottom: 17px;"><code>MAX_SIZE</code>, <code>DEFAULT_COLOR</code></td>
     </tr>
-        <tr>
-      <td style="padding-bottom: 17px;"><strong>Variables in Go</strong></td>
-      <td style="padding-bottom: 17px;">Hungarian nNotation</td>
-      <td style="padding-bottom: 17px;"><code>int iNumber</code>, <code>aArray[]</code></td>
-    </tr>
   </tbody>
 </table>
 
