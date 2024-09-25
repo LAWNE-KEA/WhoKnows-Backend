@@ -38,7 +38,7 @@ jobs:
       # Step 5: Transfer the binary to the Azure VM using scp
       - name: Copy binary to Azure VM
         run: |
-          scp -o StrictHostKeyChecking=no -r ./ ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:${{ secrets.VM_PROJECT_DIR }}
+          scp -o StrictHostKeyChecking=no -r ./myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:${{ secrets.VM_PROJECT_DIR }}
 
       # Step 6: SSH into Azure VM and restart the application
       - name: Restart application on Azure VM
