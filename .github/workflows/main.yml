@@ -1,0 +1,50 @@
+name: Deploy Go Project to Azure VM
+
+on:
+  push:
+    branches:
+      - main  # Deploy on pushes to main branch
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Go environment
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.20'  # Set the Go version you need
+
+      # Step 3: Build the Go project
+      - name: Build Go application
+        run: |
+          go mod tidy
+          go build -o myapp ./main.go  # Adjust to match your project's entry point
+
+      # Step 4: Add SSH private key
+      - name: Add SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.AZURE_VM_IP }}
+
+      # Step 5: Transfer the binary to the Azure VM using scp
+      - name: Copy binary to Azure VM
+        run: |
+          scp -o StrictHostKeyChecking=no -r ./myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:${{ secrets.VM_PROJECT_DIR }}
+
+      # Step 6: SSH into Azure VM and restart the application
+      - name: Restart application on Azure VM
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
+          sudo systemctl stop myapp.service || true  # Stop existing service if it exists
+          sudo mv ~/project_dir/myapp /usr/local/bin/myapp  # Move binary to final directory
+          sudo chmod +x /usr/local/bin/myapp  # Ensure it's executable
+          sudo systemctl start myapp.service  # Start or restart the app
+          EOF
