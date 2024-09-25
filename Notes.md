@@ -117,3 +117,6 @@ Consider whether you want to ensure linting before anyone can push their code or
 
   - Because Go implicit have linting capabilities build into it, we consider it as something that we have already been given by Go.
 
+#GitHub Badge for GitHub Actions
+
+![<TEXT ON SHIELD>](https://github.com/<ORGANIZATION>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)
