@@ -23,29 +23,33 @@ jobs:
 
       # Step 3: Build the Go project
       - name: Build Go application
-        working-directory: ./backend
+        working-directory: ./backend  # Ensure the correct working directory
         run: |
           go mod tidy
           go build -o myapp ./main.go  # Adjust to match your project's entry point
 
-      # Step 4: Add SSH private key
-      - name: Add SSH key
-        uses: shimataro/ssh-key-action@v2
+      # Step 4: Set up SSH key and known hosts
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.10.1
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.AZURE_VM_IP }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      # Step 5: Transfer the binary to the Azure VM using scp
+      # Step 5: Add known hosts
+      - name: Add known hosts
+        run: |
+          echo "${{ secrets.AZURE_VM_IP }} ssh-ed25519 $(ssh-keyscan -t ed25519 ${{ secrets.AZURE_VM_IP }})" >> ~/.ssh/known_hosts
+
+      # Step 6: Transfer the binary to the Azure VM using scp
       - name: Copy binary to Azure VM
         run: |
-          scp -o StrictHostKeyChecking=no -r ./backend/myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:${{ secrets.VM_PROJECT_DIR }}
+          scp -o StrictHostKeyChecking=no ./backend/myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:${{ secrets.VM_PROJECT_DIR }}
 
-      # Step 6: SSH into Azure VM and restart the application
+      # Step 7: Restart application on Azure VM
       - name: Restart application on Azure VM
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
           sudo systemctl stop myapp.service || true  # Stop existing service if it exists
-          sudo mv ~/project_dir/myapp /usr/local/bin/myapp  # Move binary to final directory
+          sudo mv ${VM_PROJECT_DIR}/myapp /usr/local/bin/myapp  # Move binary to final directory
           sudo chmod +x /usr/local/bin/myapp  # Ensure it's executable
           sudo systemctl start myapp.service  # Start or restart the app
           EOF
