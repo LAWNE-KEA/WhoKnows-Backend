@@ -83,3 +83,25 @@ Commit conventions, try to keep the format of:
 
 ---
 
+
+---
+Requirement for Mandatory II
+After you have setup a these code quality tools and gone through the issues, your group should create a brief document that answers the following questions:
+
+Do you agree with the findings?
+
+  We agree that it could potentially see our code as having minor problems, but we think it was too early for us to tell if it was something we wanted to shift out attention to at this tage.
+  
+Which ones did you fix?
+
+  We fixed none of them due to the fact that we wanted to experience bigger conflicts, in order to put it into perspective if it was indeed worth giving our time into these small issues.
+
+Which ones did you ignore?
+
+  We ignored all of the 6/6 issues. We had 1 (1 dot) minor and 5 major (2 dots) issues.
+
+Why?
+
+  We have already answered this.
+
+While only one can setup the integration with SonarQube, everyone should be able to answer the questions above for the exam.
