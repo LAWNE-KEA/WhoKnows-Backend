@@ -42,6 +42,8 @@ func main() {
 
 	http.HandleFunc("/api/register", apiRegister)
 
+    http.HandleFunc("/api/weather", apiWeather)
+
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -277,6 +279,12 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusBadRequest)
 	json.NewEncoder(w).Encode(map[string]string{"error": error})
+}
+
+func apiWeather(w http.ResponseWriter, r *http.Request) {
+    // Handle the actual weather API logic here
+    // For now, return a dummy response
+    fmt.Fprintf(w, "Weather API is not implemented yet.")
 }
 
 //test?
