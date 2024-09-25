@@ -23,7 +23,7 @@ jobs:
 
       # Step 3: Build the Go project
       - name: Build Go application
-        working-directory: ./WhoKnows-Backend/backend
+        working-directory: ./backend
         run: |
           go mod tidy
           go build -o myapp ./main.go  # Adjust to match your project's entry point
