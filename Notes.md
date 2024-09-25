@@ -110,3 +110,10 @@ Why?
   We have already answered this.
 
 While only one can setup the integration with SonarQube, everyone should be able to answer the questions above for the exam.
+
+#Linting
+
+Consider whether you want to ensure linting before anyone can push their code or make it part of a CI pipeline or both.
+
+  - Because Go implicit have linting capabilities build into it, we consider it as something that we have already been given by Go.
+
