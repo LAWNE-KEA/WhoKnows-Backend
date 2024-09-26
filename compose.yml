@@ -1,0 +1,42 @@
+# docker compose build
+# docker compose up
+services:
+  mysql_db:
+    image: mysql:latest
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=whoknows
+    volumes:
+      - mysql_data:/var/lib/mysql # Named volume for data persistence
+    ports:
+      - 3307:3306
+    networks:
+      - mynetwork
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart:  unless-stopped
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+# when done docker compose down

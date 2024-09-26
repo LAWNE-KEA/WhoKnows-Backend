@@ -1,48 +1,49 @@
 package main
 
 import (
-	"crypto/md5"
-	"database/sql"
-	"encoding/hex"
-	"encoding/json"
-	"fmt"
-	"log"
-	"net/http"
+    "crypto/md5"
+    "database/sql"
+    "encoding/hex"
+    "encoding/json"
+	"io/ioutil"
 	"os"
-	"strings"
-	"time"
+    "fmt"
+    "log"
+    "net/http"
+    "strings"
+    "time"
 
-	"github.com/google/uuid"
-	_ "github.com/mattn/go-sqlite3"
+    "github.com/google/uuid"
+    _ "github.com/go-sql-driver/mysql"
 )
 
-var DATABASE_PATH = "./tmp/whoknows.db"
+var DATABASE_PATH = "root:root@tcp(127.0.0.1:3306)/whoknows"
 
 type session struct {
-	userID   int
-	username string
-	expiry   time.Time
+    userID   int
+    username string
+    expiry   time.Time
 }
 
 var sessionStore = map[string]session{}
 
 // Run the server on port 8000
 func main() {
-	fmt.Println("Starting server on port 8080")
+    fmt.Println("Starting server on port 8080")
 
-	initDB()
+    initDB()
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
-	})
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello, World!")
+    })
 
-	http.HandleFunc("/api/search", searchHandler)
+    http.HandleFunc("/api/search", searchHandler)
 
-	http.HandleFunc("/api/login", loginHandler)
+    http.HandleFunc("/api/login", loginHandler)
 
-	http.HandleFunc("/api/register", apiRegister)
+    http.HandleFunc("/api/register", apiRegister)
 
-	http.ListenAndServe(":8080", nil)
+    http.ListenAndServe(":8080", nil)
 }
 
 func enableCors(w *http.ResponseWriter) {
@@ -50,28 +51,47 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 func initDB() {
-	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	// Open the SQL file
+	sqlFile, err := os.Open("schema.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer sqlFile.Close()
+
+	// Read the SQL file
+	sqlBytes, err := ioutil.ReadAll(sqlFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Convert SQL bytes to string
+	sqlCommands := string(sqlBytes)
+
+	// Open the database connection
+	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/whoknows") // Replace with your database connection info
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	schema, err := os.ReadFile("./schema.sql")
+	// Prepare the SQL statement
+	stmt, err := db.Prepare(sqlCommands)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec(string(schema))
+	// Execute the SQL statement
+	_, err = stmt.Exec()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Initialized the database:", DATABASE_PATH)
+	fmt.Println("SQL commands executed successfully")
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
-	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -158,7 +178,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if (*r).Method == "OPTIONS" {
 		return
 	}
-	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
 		http.Error(w, "Database connection error", http.StatusInternalServerError)
 		return
@@ -243,7 +263,7 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db, err := sql.Open("sqlite3", DATABASE_PATH)
+	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
 		log.Fatal(err)
 	}

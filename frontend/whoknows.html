@@ -47,6 +47,8 @@
   <script>
     let searchInput;
 
+    const BASE_URL = 'http://localhost:8080/';
+
     document.addEventListener('DOMContentLoaded', () => {
       searchInput = document.getElementById("search-input");
 
@@ -70,7 +72,7 @@
 
     function makeSearchRequest() {
       const query = searchInput.value;
-      const url = new URL(`http://ec2-16-171-159-57.eu-north-1.compute.amazonaws.com/api/search`);
+      const url = new URL(`${BASE_URL}api/search`);
       url.searchParams.set('q', query);
 
       fetch(url)
@@ -100,7 +102,7 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            fetch('http://localhost:8080/api/login', {
+            fetch(`${BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

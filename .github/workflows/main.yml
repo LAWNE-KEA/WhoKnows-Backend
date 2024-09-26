@@ -26,7 +26,7 @@ jobs:
         working-directory: ./backend
         run: |
           go mod tidy
-          go build -o myapp ./main.go  # Adjust to match your project's entry point
+          go build -o whoknows ./main.go  # Adjust to match your project's entry point
 
       # Step 4: Add SSH private key
       - name: Add SSH key
@@ -38,18 +38,18 @@ jobs:
       # Step 5: Transfer the binary to a temp location on the Azure VM
       - name: Copy binary to Azure VM
         run: |
-            scp -o StrictHostKeyChecking=no -r ./backend/myapp ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:/home/${{ secrets.AZURE_VM_USER }}/myapp_temp
+            scp -o StrictHostKeyChecking=no -r ./backend/whoknows ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }}:/home/${{ secrets.AZURE_VM_USER }}/whoknows_temp
             
       - name: Create systemd service file
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} << 'EOF'
-          sudo bash -c 'cat > /etc/systemd/system/myapp.service << "EOL"
+          sudo bash -c 'cat > /etc/systemd/system/whoknows.service << "EOL"
           [Unit]
           Description=My Go Application
           After=network.target
           
           [Service]
-          ExecStart=/usr/local/bin/myapp
+          ExecStart=/usr/local/bin/whoknows
           Restart=always
           User=${{ secrets.AZURE_VM_USER }}
           WorkingDirectory=/home/${{ secrets.AZURE_VM_USER }}
@@ -59,19 +59,19 @@ jobs:
           WantedBy=multi-user.target
           EOL'
           sudo systemctl daemon-reload
-          sudo systemctl enable myapp.service
+          sudo systemctl enable whoknows.service
           EOF
           
       # Step 6: SSH into Azure VM and restart the application
       - name: Stop existing application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl stop myapp.service || true"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl stop whoknows.service || true"
 
       - name: Move binary and set permissions
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo mv /home/${{ secrets.AZURE_VM_USER }}/myapp_temp /usr/local/bin/myapp"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo chmod +x /usr/local/bin/myapp"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo mv /home/${{ secrets.AZURE_VM_USER }}/whoknows_temp /usr/local/bin/whoknows"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo chmod +x /usr/local/bin/whoknows"
 
       - name: Start the application
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl start myapp.service"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_VM_USER }}@${{ secrets.AZURE_VM_IP }} "sudo systemctl start whoknows.service"
