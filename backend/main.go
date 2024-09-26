@@ -17,7 +17,7 @@ import (
     _ "github.com/go-sql-driver/mysql"
 )
 
-var DATABASE_PATH = "root:root@tcp(127.0.0.1:3306)/whoknows"
+var DATABASE_PATH = ENV_MYSQL_USER+":"+ENV_MYSQL_PASSWORD+"@(127.0.0.1:3306)/whoknows"
 
 type session struct {
     userID   int
@@ -68,7 +68,7 @@ func initDB() {
 	sqlCommands := string(sqlBytes)
 
 	// Open the database connection
-	db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/whoknows") // Replace with your database connection info
+	db, err := sql.Open("mysql", DATABASE_PATH) // Replace with your database connection info
 	if err != nil {
 		log.Fatal(err)
 	}

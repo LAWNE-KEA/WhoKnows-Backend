@@ -1,4 +1,4 @@
-use whoknows;
+USE whoknows;
 
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS pages;
