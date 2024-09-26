@@ -5,8 +5,7 @@ import (
     "database/sql"
     "encoding/hex"
     "encoding/json"
-	"io/ioutil"
-	"os"
+		"os"
     "fmt"
     "log"
     "net/http"
@@ -52,38 +51,36 @@ func enableCors(w *http.ResponseWriter) {
 
 func initDB() {
 	// Open the SQL file
-	sqlFile, err := os.Open("schema.sql")
+	sqlFile, err := os.ReadFile("schema.sql")
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer sqlFile.Close()
-
-	// Read the SQL file
-	sqlBytes, err := ioutil.ReadAll(sqlFile)
-	if err != nil {
-		log.Fatal(err)
+			log.Fatal(err)
 	}
 
 	// Convert SQL bytes to string
-	sqlCommands := string(sqlBytes)
+	sqlCommands := string(sqlFile)
+
+	// Split the SQL commands
+	commands := strings.Split(sqlCommands, ";")
 
 	// Open the database connection
-	db, err := sql.Open("mysql", DATABASE_PATH) // Replace with your database connection info
+	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
-		log.Fatal(err)
+			log.Fatal(err)
 	}
 	defer db.Close()
 
-	// Prepare the SQL statement
-	stmt, err := db.Prepare(sqlCommands)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Execute each command separately
+	for _, command := range commands {
+			// Trim whitespace and skip empty commands
+			command = strings.TrimSpace(command)
+			if command == "" {
+					continue
+			}
 
-	// Execute the SQL statement
-	_, err = stmt.Exec()
-	if err != nil {
-		log.Fatal(err)
+			_, err := db.Exec(command)
+			if err != nil {
+					log.Printf("Error executing SQL command: %v\nCommand: %s", err, command)
+			}
 	}
 
 	fmt.Println("SQL commands executed successfully")
