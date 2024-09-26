@@ -16,7 +16,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var DATABASE_PATH = "root:Anga0001kea@tcp(127.0.0.1:3306)/whoknows"
+var DATABASE_PATH = ENV_MYSQL_USER+":"+ENV_MYSQL_PASSWORD+"@(127.0.0.1:3306)/whoknows"
 
 type session struct {
     userID   int
