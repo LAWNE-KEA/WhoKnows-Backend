@@ -1,21 +1,21 @@
-Choice of Framework notes
+# Choice of Framework notes
 
-Backend: Go
-Why go:
+# Backend: Go
+Why we chose Go:
 Go syntax seemed easy to get into with our background. It also was a language we would like to become familiar with.
-We will try to use the standard package and not gorilla. We have chosen this to make our app simple and get a strong understanding of the standard package of Go.
+We will try to use the standard package and not Gorilla. We have chosen this to make our application simple and get a strong understanding of the standard package of the Go framework.
 Cute mascot. It also seems to be vaguely like C which is a language most of the group is also learning this semester.
 
-Frontend:
-Typescript, CSS. HTML. These are languages we know and it will be great for our needs. We are considering a framework like angular but if we don't have to use one we would prefer not to.
+# Frontend:
+Typescript, CSS. HTML. These are languages we know and it will be great for our needs. We are considering a framework like Angular but if we don't have to use one we would prefer not to.
 
-Problems with code base:
-Makefile doesn't work for any of the group members despite the program being functional when you circumvent it.
-Code is written inefficiently with functions being unnecessarily complex and long.
-Env variables are in source code instead of as secrets.
-Some of the tests seem to be working incorrectly.
-md5 is not as safe as it was in 2009.
-Missing import in tests.
+# Problems with code base:
+  1. Makefile doesn't work for any of the group members despite the program being functional when you circumvent it.
+  2. Code is written inefficiently with functions being unnecessarily complex and long.
+  3. Env variables are in source code instead of as secrets.
+  4. Some of the tests seem to be working incorrectly.
+  5. md5 is not as safe as it was in 2009.
+  6. Missing import in tests.
 
 Commit conventions, try to keep the format of:
 
@@ -85,38 +85,42 @@ Commit conventions, try to keep the format of:
 
 
 ---
-Requirement for Mandatory II
+# Requirement for Mandatory II
 After you have setup a these code quality tools and gone through the issues, your group should create a brief document that answers the following questions:
 
-Do you agree with the findings?
+# Do you agree with the findings?
 
   We agree that it could potentially see our code as having minor problems, but we think it was too early for us to tell if it was something we wanted to shift out attention to at this tage.
   
-Which ones did you fix?
+# Which ones did you fix?
+
+We fixed none of them due to the fact that we wanted to experience bigger conflicts, in order to put it into perspective if it was indeed worth giving our time into these small issues.
+
+Here are some screenshots with issues that Code Climate detected in our repository.
 
 <img width="879" alt="Skærmbillede 2024-09-25 kl  16 33 53" src="https://github.com/user-attachments/assets/c3235994-0a84-4c51-811f-f688dff4088e">
+
+---
 
 <img width="708" alt="Skærmbillede 2024-09-25 kl  16 34 00" src="https://github.com/user-attachments/assets/6ae46597-0231-4a9e-ba1a-17d065d4e275">
 
 
-  We fixed none of them due to the fact that we wanted to experience bigger conflicts, in order to put it into perspective if it was indeed worth giving our time into these small issues.
-
-Which ones did you ignore?
+# Which ones did you ignore?
 
   We ignored all of the 6/6 issues. We had 1 (1 dot) minor and 5 major (2 dots) issues.
 
-Why?
+# Why?
 
   We have already answered this.
 
 While only one can setup the integration with SonarQube, everyone should be able to answer the questions above for the exam.
 
-#Linting
+# Linting
 
 Consider whether you want to ensure linting before anyone can push their code or make it part of a CI pipeline or both.
 
   - Because Go implicit have linting capabilities build into it, we consider it as something that we have already been given by Go.
 
-#GitHub Badge for GitHub Actions
+# GitHub Badge for GitHub Actions
 
 ![<TEXT ON SHIELD>](https://github.com/<LAWNE-KEA>/<WhoKnows-Backend>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)
