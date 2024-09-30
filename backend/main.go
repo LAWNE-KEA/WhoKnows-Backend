@@ -332,7 +332,13 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Fprintf(w, "Registered successfully")
+        response := map[string]interface{}{
+            "message":    "Registered successfully",
+            "statusCode": http.StatusOK,
+        }
+        w.Header().Set("ContentType", "application/json")
+		w.WriteHeader(http.StatusOK)
+        json.NewEncoder(w).Encode(response)
 		return
 	}
 
