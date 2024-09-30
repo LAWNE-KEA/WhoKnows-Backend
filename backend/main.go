@@ -298,50 +298,61 @@ func hashPassword(password string) string {
 }
 
 func apiRegister(w http.ResponseWriter, r *http.Request) {
-	// enableCors(&w)
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
+    // enableCors(&w)
+    if r.Method != http.MethodPost {
+        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+        return
+    }
 
-	db, err := sql.Open("mysql", DATABASE_PATH)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+    db, err := sql.Open("mysql", DATABASE_PATH)
+    if err != nil {
+        http.Error(w, "Database connection error", http.StatusInternalServerError)
+        return
+    }
+    defer db.Close()
 
-	var error string
-	username := r.FormValue("username")
-	email := r.FormValue("email")
-	password := r.FormValue("password")
-	password2 := r.FormValue("password2")
+    username := r.FormValue("username")
+    email := r.FormValue("email")
+    password := r.FormValue("password")
+    password2 := r.FormValue("password2")
 
-	if username == "" {
-		error = "You have to enter a username"
-	} else if email == "" || !strings.Contains(email, "@") {
-		error = "You have to enter a valid email address"
-	} else if password == "" {
-		error = "You have to enter a password"
-	} else if password != password2 {
-		error = "The two passwords do not match"
-	} else if _, err := getUserID(db, username); err == nil {
-		error = "The username is already taken"
-	} else {
-		hashedPassword := hashPassword(password)
-		_, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashedPassword)
-		if err != nil {
-			log.Fatal(err)
-		}
-        response := map[string]interface{}{
-            "message":    "Registered successfully",
-            "statusCode": http.StatusOK,
+    var errorMsg string
+    if username == "" {
+        errorMsg = "You have to enter a username"
+    } else if email == "" || !strings.Contains(email, "@") {
+        errorMsg = "You have to enter a valid email address"
+    } else if password == "" {
+        errorMsg = "You have to enter a password"
+    } else if password != password2 {
+        errorMsg = "The two passwords do not match"
+    } else {
+        // Check if username already exists
+        _, err := getUserID(db, username)
+        if err == nil {
+            errorMsg = "The username is already taken"
+        } else if err != sql.ErrNoRows {
+            // An unexpected error occurred
+            log.Printf("Error checking username: %v", err)
+            http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
+            return
+        } else {
+            // Username is available, proceed with registration
+            hashedPassword := hashPassword(password)
+            _, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashedPassword)
+            if err != nil {
+                log.Printf("Error inserting new user: %v", err)
+                http.Error(w, "Failed to register user", http.StatusInternalServerError)
+                return
+            }
+            w.WriteHeader(http.StatusOK)
+            json.NewEncoder(w).Encode(map[string]string{"message": "Registered successfully"})
+            return
         }
-        w.Header().Set("ContentType", "application/json")
-		w.WriteHeader(http.StatusOK)
-        json.NewEncoder(w).Encode(response)
-		return
-	}
+    }
 
-	w.WriteHeader(http.StatusBadRequest)
-	json.NewEncoder(w).Encode(map[string]string{"error": error})
+    if errorMsg != "" {
+        w.WriteHeader(http.StatusBadRequest)
+        json.NewEncoder(w).Encode(map[string]string{"error": errorMsg})
+        return
+    }
 }
