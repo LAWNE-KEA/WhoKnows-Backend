@@ -15,13 +15,13 @@ services:
       test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       interval: 20s
       timeout: 10s
-      retries: 5
+      retries: 1
 
   app:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    restart:  unless-stopped
+    restart: no
     ports:
       - 8080:8080
     depends_on:

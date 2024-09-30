@@ -4,7 +4,7 @@ WORKDIR /app
 
 ENV ENV_MYSQL_USER=root
 ENV ENV_MYSQL_PASSWORD=root
-ENV ENV_INITMODE=true
+ENV ENV_INIT_MODE=true
 
 # Effectively tracks changes within your go.mod file
 COPY go.mod .
