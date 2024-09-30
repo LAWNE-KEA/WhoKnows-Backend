@@ -16,9 +16,10 @@ import (
 	"github.com/google/uuid"
 )
 
-var envMySQLUser, _ = os.LookupEnv("ENV_MYSQL_USER")
-var envMySQLPassword, _ = os.LookupEnv("ENV_MYSQL_PASSWORD")
-var DATABASE_PATH = envMySQLUser + ":" + envMySQLPassword + "@(mysql_db:3306)/whoknows"
+var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
+var ENV_MYSQL_PASSWORD, _ = os.LookupEnv("ENV_MYSQL_PASSWORD")
+var ENV_INIT_MODE, _ = os.LookupEnv("ENV_INIT_MODE")
+var DATABASE_PATH = ENV_MYSQL_USER + ":" + ENV_MYSQL_PASSWORD + "@(mysql_db:3306)/whoknows"
 
 type session struct {
 	userID   int
@@ -49,12 +50,10 @@ func corsMiddleware(next http.Handler) http.Handler {
 func main() {
 	fmt.Println("Starting server on port 8080")
 
-	initDB()
+	initDB(ENV_INIT_MODE == "true")
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
-	})
+
 	mux.HandleFunc("/api/search", searchHandler)
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/register", apiRegister)
@@ -65,41 +64,43 @@ func main() {
 	http.ListenAndServe(":8080", handler)
 }
 
-func initDB() {
+func initDB(initMode bool) {
 	// Open the SQL file
-	sqlFile, err := os.ReadFile("./schema.sql")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Convert SQL bytes to string
-	sqlCommands := string(sqlFile)
-
-	// Parse the SQL commands
-	commands := parseSQLCommands(sqlCommands)
-
-	// Open the database connection
-	db, err := sql.Open("mysql", DATABASE_PATH)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	// Execute each command separately
-	for _, command := range commands {
-		// Trim whitespace and skip empty commands
-		command = strings.TrimSpace(command)
-		if command == "" {
-			continue
-		}
-
-		_, err := db.Exec(command)
+	if initMode {
+		sqlFile, err := os.ReadFile("./schema.sql")
 		if err != nil {
 			log.Fatal(err)
 		}
-	}
 
-	fmt.Println("SQL commands executed successfully")
+		// Convert SQL bytes to string
+		sqlCommands := string(sqlFile)
+
+		// Parse the SQL commands
+		commands := parseSQLCommands(sqlCommands)
+
+		// Open the database connection
+		db, err := sql.Open("mysql", DATABASE_PATH)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer db.Close()
+
+		// Execute each command separately
+		for _, command := range commands {
+			// Trim whitespace and skip empty commands
+			command = strings.TrimSpace(command)
+			if command == "" {
+				continue
+			}
+
+			_, err := db.Exec(command)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+
+		fmt.Println("SQL commands executed successfully")
+	}
 }
 
 func parseSQLCommands(sqlCommands string) []string {
