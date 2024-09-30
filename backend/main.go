@@ -11,14 +11,12 @@ import (
 	"os"
 	"strings"
 	"time"
-
-    "github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 )
 
 
-var DATABASE_PATH = readEnv("ENV_MYSQL_USER")+":"+readEnv("ENV_MYSQL_PASSWORD")+"@(127.0.0.1:3306)/whoknows"
+var DATABASE_PATH = os.lookupEnv("ENV_MYSQL_USER")+":"+os.lookupEnv("ENV_MYSQL_PASSWORD")+"@(127.0.0.1:3306)/whoknows"
 
 type session struct {
     userID   int
@@ -29,62 +27,40 @@ type session struct {
 var sessionStore = map[string]session{}
 
 // Middleware to handle CORS
-// func corsMiddleware(next http.Handler) http.Handler {
-//     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-//         w.Header().Set("Access-Control-Allow-Origin", "*")
-//         w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-//         w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+func corsMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-//         // Handle preflight requests
-//         if r.Method == http.MethodOptions {
-//             w.WriteHeader(http.StatusOK)
-//             return
-//         }
+        // Handle preflight requests
+        if r.Method == http.MethodOptions {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
 
-//         next.ServeHTTP(w, r)
-//     })
-// }
+        next.ServeHTTP(w, r)
+    })
+}
 
 // Run the server on port 8000
 func main() {
     fmt.Println("Starting server on port 8080")
 
-    fmt.Println("start initDB")
     initDB()
-    fmt.Println("end initDB")
 
-    fmt.Println("start http.HandleFunc")
-    //mux := http.NewServeMux()
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+    mux := http.NewServeMux()
+    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "Hello, World!")
     })
-
-    fmt.Println("end http.HandleFunc")
-    
-    fmt.Println("start routes")
-    http.HandleFunc("/api/search", searchHandler)
-    http.HandleFunc("/api/login", loginHandler)
-    http.HandleFunc("/api/register", apiRegister)
-    fmt.Println("end routes")
+    mux.HandleFunc("/api/search", searchHandler)
+    mux.HandleFunc("/api/login", loginHandler)
+    mux.HandleFunc("/api/register", apiRegister)
 
     // Apply CORS middleware
-    //handler := corsMiddleware(mux)
+    handler := corsMiddleware(mux)
 
-    fmt.Println("start http.ListenAndServe")
-    http.ListenAndServe("8080", nil)
-    fmt.Println("end http.ListenAndServe")
-}
-
-func readEnv(key string) string {
-    err := godotenv.Load(".env")
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
-    return os.Getenv(key)
-}
-
-func enableCors(w *http.ResponseWriter) {
-    (*w).Header().Set("Access-Control-Allow-Origin", "*")
+    http.ListenAndServe(":8080", handler)
 }
 
 func initDB() {
@@ -159,7 +135,7 @@ func parseSQLCommands(sqlCommands string) []string {
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-    enableCors(&w)
+    // enableCors(&w)
     db, err := sql.Open("mysql", DATABASE_PATH)
     if err != nil {
         log.Fatal(err)
@@ -237,15 +213,9 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    enableCors(&w)
+    // enableCors(&w)
 
 	log.Printf("Received %s request for /api/login", r.Method)
-
-
-    if r.Method != http.MethodPost {
-        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-        return
-    }
 
     db, err := sql.Open("mysql", DATABASE_PATH)
     if err != nil {
@@ -292,7 +262,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
         Path:     "/",
         HttpOnly: true,
         Secure:   false, // Set to true if using HTTPS
-        SameSite: http.SameSiteLaxMode,
     })
 
     println(sessionID)
@@ -326,7 +295,7 @@ func hashPassword(password string) string {
 }
 
 func apiRegister(w http.ResponseWriter, r *http.Request) {
-    enableCors(&w)
+    // enableCors(&w)
     if r.Method != http.MethodPost {
         http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
         return
