@@ -59,6 +59,7 @@ func main() {
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/register", apiRegister)
 	mux.HandleFunc("/api/weather", apiWeather)
+	mux.HandleFunc("/api/logout", logoutHandler)
 
 	// Apply CORS middleware
 	handler := corsMiddleware(mux)
@@ -218,66 +219,72 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	// enableCors(&w)
-
 	log.Printf("Received %s request for /api/login", r.Method)
 
-	db, err := sql.Open("mysql", DATABASE_PATH)
-	if err != nil {
-		http.Error(w, "Database connection error", http.StatusInternalServerError)
-		return
+	if r.Method != http.MethodPost {
+			log.Printf("Invalid request method: %s", r.Method)
+			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+			return
 	}
-	defer db.Close()
+
+	err := r.ParseForm()
+	if err != nil {
+			log.Printf("Error parsing form: %v", err)
+			http.Error(w, "Error parsing form data", http.StatusBadRequest)
+			return
+	}
 
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if username == "" || password == "" {
-		http.Error(w, "Missing username or password", http.StatusBadRequest)
-		return
+			log.Printf("Missing username or password")
+			http.Error(w, "Missing username or password", http.StatusBadRequest)
+			return
 	}
 
-	var user struct {
-		ID       int
-		Username string
-		Password string
-	}
+	 // Validate the username and password against the database
+	 db, err := sql.Open("mysql", DATABASE_PATH)
+	 if err != nil {
+			 log.Fatal(err)
+	 }
+	 defer db.Close()
 
-	err = db.QueryRow("SELECT id, username, password FROM users WHERE username = ?", username).Scan(&user.ID, &user.Username, &user.Password)
-	if err == sql.ErrNoRows {
-		http.Error(w, "Invalid username", http.StatusUnauthorized)
-		return
-	} else if err != nil {
-		http.Error(w, "Database query error", http.StatusInternalServerError)
-		return
-	}
+	 var storedHash string
+	 err = db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedHash)
+	 if err != nil {
+			 http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+			 return
+	 }
 
-	if !verifyPassword(user.Password, password) {
-		http.Error(w, "Invalid password", http.StatusUnauthorized)
-		return
-	}
+	 if !verifyPassword(storedHash, password) {
+			 http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+			 return
+	 }
 
 	sessionID := uuid.New().String()
-	sessionStore[sessionID] = session{userID: user.ID, username: username, expiry: time.Now().Add(24 * time.Hour)}
+	expirationTime := time.Now().Add(24 * time.Hour)
+	sessionStore[sessionID] = session{userID: 1, username: username, expiry: expirationTime}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:     "session_id",
-		Value:    sessionID,
-		Expires:  time.Now().Add(24 * time.Hour),
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   false, // Set to true if using HTTPS
+			Name:     "session_id",
+			Value:    sessionID,
+			Expires:  expirationTime,
+			Path:     "/",
+			HttpOnly: false, // Set to false for debugging
+			Secure:   false, // Set to true if using HTTPS
+			SameSite: http.SameSiteLaxMode,
 	})
 
-	println(sessionID)
-
-	response := map[string]interface{}{
-		"message":    "Logged in successfully",
-		"statusCode": http.StatusOK,
-	}
+	log.Printf("Login successful. Session ID: %s, Username: %s", sessionID, username)
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+			"message":    "Logged in successfully",
+			"statusCode": http.StatusOK,
+			"username":   username,
+			"sessionID":  sessionID,
+	})
 }
 
 func verifyPassword(storedHash, password string) bool {
@@ -363,4 +370,64 @@ func apiWeather(w http.ResponseWriter, r *http.Request) {
 	// Handle the actual weather API logic here
 	// For now, return a dummy response
 	fmt.Fprintf(w, "Weather API is not implemented yet.")
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Received %s request for /api/logout", r.Method)
+
+	if r.Method != http.MethodPost {
+			log.Printf("Invalid request method: %s", r.Method)
+			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+			return
+	}
+
+	// Log all cookies
+	for _, cookie := range r.Cookies() {
+			log.Printf("Received cookie: %s=%s", cookie.Name, cookie.Value)
+	}
+
+	var requestBody struct {
+			SessionID string `json:"sessionID"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestBody)
+	if err != nil {
+			log.Printf("Error decoding request body: %v", err)
+			http.Error(w, "Error decoding request body", http.StatusBadRequest)
+			return
+	}
+
+	sessionID := requestBody.SessionID
+	log.Printf("Received session ID from request body: %s", sessionID)
+
+	if sessionID == "" {
+			log.Printf("No session ID provided in request body")
+			http.Error(w, "No active session", http.StatusBadRequest)
+			return
+	}
+
+	// Remove the session from the server-side store
+	if _, exists := sessionStore[sessionID]; !exists {
+			log.Printf("Session not found in sessionStore: %s", sessionID)
+			http.Error(w, "Invalid session", http.StatusBadRequest)
+			return
+	}
+	delete(sessionStore, sessionID)
+
+	// Expire the client-side cookie
+	http.SetCookie(w, &http.Cookie{
+			Name:     "session_id",
+			Value:    "",
+			Expires:  time.Now().Add(-1 * time.Hour), // Set expiration in the past
+			Path:     "/",
+			HttpOnly: false, // Changed to false for debugging
+			Secure:   false, // Set to true if using HTTPS
+			SameSite: http.SameSiteLaxMode, // Changed to Lax
+	})
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+			"message": "Logged out successfully",
+	})
+	log.Printf("Logout successful for session: %s", sessionID)
 }

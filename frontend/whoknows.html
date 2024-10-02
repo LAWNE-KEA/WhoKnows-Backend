@@ -177,10 +177,28 @@
           .catch((error) => console.error("Error:", error));
       }
 
-      function loginSuccess() {
+      function loginSuccess(data) {
+        if (!data || !data.username) {
+          console.error("Invalid login data:", data);
+          throw new Error("Invalid login data");
+        }
+
+        console.log("Login successful:", data);
+        console.log("Cookies after login:", document.cookie);
+
         document.getElementById("login-container").style.display = "none";
         document.getElementById("search-container").style.display = "block";
-        document.getElementById("nav-login").innerText = "Search";
+        document.getElementById("nav-login").innerText = "Logout";
+        document.getElementById("nav-register").style.display = "none";
+
+        // Update the UI to show the logged-in user
+        const userInfoElement = document.createElement("span");
+        userInfoElement.id = "user-info";
+        userInfoElement.innerText = `Welcome, ${data.username}!`;
+        document.querySelector(".navigation nav").appendChild(userInfoElement);
+
+        // Add logout functionality
+        document.getElementById("nav-login").onclick = handleLogout;
       }
 
       function handleLogin(event) {
@@ -199,18 +217,27 @@
           }),
           credentials: "include",
         })
-          .then((response) => response.json())
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(
+                  `Login failed: ${response.status} ${response.statusText}\n${text}`
+                );
+              });
+            }
+            return response.json();
+          })
           .then((data) => {
-            if (data.error) {
-              document.getElementById(
-                "login-error"
-              ).innerText = `Error: ${data.error}`;
-              document.getElementById("login-error").style.display = "block";
+            console.log("Login response:", data);
+            if (data.statusCode === 200) {
+              setCookie("session_id", data.sessionID, 1);
+              loginSuccess(data);
             } else {
-              loginSuccess();
+              throw new Error(data.message || "Login failed");
             }
           })
           .catch((error) => {
+            console.error("Login error:", error);
             document.getElementById(
               "login-error"
             ).innerText = `Error: ${error.message}`;
@@ -255,6 +282,79 @@
             ).innerText = `Error: ${error.message}`;
             document.getElementById("register-error").style.display = "block";
           });
+      }
+
+      function handleLogout() {
+        console.log("Cookies before logout:", document.cookie);
+        const sessionID = getCookie("session_id");
+        console.log("Session ID from cookie:", sessionID);
+
+        if (!sessionID) {
+          console.error("No session ID found. User might not be logged in.");
+          alert("You are not logged in.");
+          return;
+        }
+
+        fetch(`${BASE_URL}api/logout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ sessionID: sessionID }),
+          credentials: "include",
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(
+                  `Logout failed: ${response.status} ${response.statusText}\n${text}`
+                );
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            setCookie("session_id", "", -1);
+            console.log("Logout response:", data);
+            console.log("Cookies after logout:", document.cookie);
+            resetUIToLoggedOutState();
+          })
+          .catch((error) => {
+            console.error("Logout error:", error);
+            alert(`Logout failed. Error: ${error.message}`);
+          });
+      }
+
+      function resetUIToLoggedOutState() {
+        document.getElementById("nav-login").innerText = "Log in";
+        document.getElementById("nav-register").style.display = "block";
+
+        const userInfo = document.getElementById("user-info");
+        if (userInfo) {
+          userInfo.remove();
+        }
+
+        document.getElementById("search-container").style.display = "block";
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("register-container").style.display = "none";
+
+        document.getElementById("nav-login").onclick = toggleLoginVisible;
+      }
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+
+      function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+          var date = new Date();
+          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+          expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
       }
     </script>
   </body>
