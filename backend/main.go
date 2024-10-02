@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"io"
 	"os"
 	"strings"
 	"time"
@@ -25,6 +26,12 @@ type session struct {
 	userID   int
 	username string
 	expiry   time.Time
+}
+
+type WeatherResponse struct {
+	Main struct {
+		Temp float64 `json:"temp"`
+	} `json:"main"`
 }
 
 var sessionStore = map[string]session{}
@@ -58,7 +65,7 @@ func main() {
 	mux.HandleFunc("/api/search", searchHandler)
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/register", apiRegister)
-	mux.HandleFunc("/api/weather", apiWeather)
+	mux.HandleFunc("/api/weather", weatherHandler)
 	mux.HandleFunc("/api/logout", logoutHandler)
 
 	// Apply CORS middleware
@@ -366,10 +373,47 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-func apiWeather(w http.ResponseWriter, r *http.Request) {
-	// Handle the actual weather API logic here
-	// For now, return a dummy response
-	fmt.Fprintf(w, "Weather API is not implemented yet.")
+func apiWeather(city string, apiKey string)(*WeatherResponse, error) {
+	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, apiKey)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var weatherResponse WeatherResponse
+	err = json.Unmarshal(body, &weatherResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return &weatherResponse, nil
+}
+
+func weatherHandler(w http.ResponseWriter, r *http.Request) {
+	city := "Copenhagen"
+	apiKey := "c7b29c23b93f65b6b249176790112875"
+	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, apiKey)
+	resp, err := http.Get(url)
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(body)
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
