@@ -57,6 +57,7 @@ func main() {
 	mux.HandleFunc("/api/search", searchHandler)
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/register", apiRegister)
+	mux.HandleFunc("/api/weather", apiWeather)
 
 	// Apply CORS middleware
 	handler := corsMiddleware(mux)
@@ -355,4 +356,10 @@ func apiRegister(w http.ResponseWriter, r *http.Request) {
         json.NewEncoder(w).Encode(map[string]string{"error": errorMsg})
         return
     }
+}
+
+func apiWeather(w http.ResponseWriter, r *http.Request) {
+	// Handle the actual weather API logic here
+	// For now, return a dummy response
+	fmt.Fprintf(w, "Weather API is not implemented yet.")
 }
