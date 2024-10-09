@@ -11,7 +11,7 @@
       <div class="navigation">
         <nav>
           <h1><a id="nav-logo">¿Who Knows?</a></h1>
-          <a id="nav-login" href="#" onclick="toggleLoginVisible()">Log in</a>
+          <a id="nav-login" href="/login">Log in</a>
           <a id="nav-register" href="#" onclick="toggleRegisterVisible()"
             >Register</a
           >
@@ -23,35 +23,7 @@
           <input id="search-input" placeholder="Search..." value="" />
           <button onclick="makeSearchRequest()">Search</button>
         </div>
-        <div id="login-container" style="display: none">
-          <h2>Log In</h2>
-          <div id="login-error" class="error" style="display: none"></div>
-          <form
-            id="loginForm"
-            action="http://localhost:8080/api/login"
-            method="POST"
-          >
-            <dl>
-              <dt>Username:</dt>
-              <dd>
-                <input
-                  type="text"
-                  name="username"
-                  id="login-username"
-                  size="30"
-                />
-              </dd>
-              <dt>Password:</dt>
-              <dd>
-                <input
-                  type="password"
-                  name="password"
-                  id="login-password"
-                  size="30"
-                />
-              </dd>
-            </dl>
-            <div class="actions"><input type="submit" value="Log In" /></div>
+
           </form>
         </div>
         <div id="register-container" style="display: none">
@@ -177,73 +149,9 @@
           .catch((error) => console.error("Error:", error));
       }
 
-      function loginSuccess(data) {
-        if (!data || !data.username) {
-          console.error("Invalid login data:", data);
-          throw new Error("Invalid login data");
-        }
+      
 
-        console.log("Login successful:", data);
-        console.log("Cookies after login:", document.cookie);
-
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("search-container").style.display = "block";
-        document.getElementById("nav-login").innerText = "Logout";
-        document.getElementById("nav-register").style.display = "none";
-
-        // Update the UI to show the logged-in user
-        const userInfoElement = document.createElement("span");
-        userInfoElement.id = "user-info";
-        userInfoElement.innerText = `Welcome, ${data.username}!`;
-        document.querySelector(".navigation nav").appendChild(userInfoElement);
-
-        // Add logout functionality
-        document.getElementById("nav-login").onclick = handleLogout;
-      }
-
-      function handleLogin(event) {
-        event.preventDefault();
-        const username = document.getElementById("login-username").value;
-        const password = document.getElementById("login-password").value;
-
-        fetch(`${BASE_URL}api/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            username: username,
-            password: password,
-          }),
-          credentials: "include",
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.text().then((text) => {
-                throw new Error(
-                  `Login failed: ${response.status} ${response.statusText}\n${text}`
-                );
-              });
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log("Login response:", data);
-            if (data.statusCode === 200) {
-              setCookie("session_id", data.sessionID, 1);
-              loginSuccess(data);
-            } else {
-              throw new Error(data.message || "Login failed");
-            }
-          })
-          .catch((error) => {
-            console.error("Login error:", error);
-            document.getElementById(
-              "login-error"
-            ).innerText = `Error: ${error.message}`;
-            document.getElementById("login-error").style.display = "block";
-          });
-      }
+      
 
       function handleRegister(event) {
         event.preventDefault();
@@ -284,46 +192,7 @@
           });
       }
 
-      function handleLogout() {
-        console.log("Cookies before logout:", document.cookie);
-        const sessionID = getCookie("session_id");
-        console.log("Session ID from cookie:", sessionID);
-
-        if (!sessionID) {
-          console.error("No session ID found. User might not be logged in.");
-          alert("You are not logged in.");
-          return;
-        }
-
-        fetch(`${BASE_URL}api/logout`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ sessionID: sessionID }),
-          credentials: "include",
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.text().then((text) => {
-                throw new Error(
-                  `Logout failed: ${response.status} ${response.statusText}\n${text}`
-                );
-              });
-            }
-            return response.json();
-          })
-          .then((data) => {
-            setCookie("session_id", "", -1);
-            console.log("Logout response:", data);
-            console.log("Cookies after logout:", document.cookie);
-            resetUIToLoggedOutState();
-          })
-          .catch((error) => {
-            console.error("Logout error:", error);
-            alert(`Logout failed. Error: ${error.message}`);
-          });
-      }
+     
 
       function resetUIToLoggedOutState() {
         document.getElementById("nav-login").innerText = "Log in";
@@ -341,21 +210,7 @@
         document.getElementById("nav-login").onclick = toggleLoginVisible;
       }
 
-      function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(";").shift();
-      }
 
-      function setCookie(name, value, days) {
-        var expires = "";
-        if (days) {
-          var date = new Date();
-          date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-          expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "") + expires + "; path=/";
-      }
     </script>
   </body>
 </html>

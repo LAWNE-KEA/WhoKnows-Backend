@@ -67,6 +67,9 @@ func main() {
 	mux.HandleFunc("/api/register", apiRegister)
 	mux.HandleFunc("/api/weather", weatherHandler)
 	mux.HandleFunc("/api/logout", logoutHandler)
+	mux.HandleFunc("/frontend/login.html", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/login.html")
+	})
 
 	// Apply CORS middleware
 	handler := corsMiddleware(mux)

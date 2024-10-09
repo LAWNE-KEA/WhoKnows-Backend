@@ -29,6 +29,9 @@ services:
         condition: service_healthy
     networks:
       - mynetwork
+    volumes:
+      - ./frontend:/app/frontend
+      - ./backend:/app/backend
 
 networks:
   mynetwork:
