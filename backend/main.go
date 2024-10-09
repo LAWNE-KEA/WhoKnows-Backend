@@ -5,10 +5,11 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
+	"mime"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"io"
 	"os"
 	"strings"
 	"time"
@@ -58,6 +59,9 @@ func corsMiddleware(next http.Handler) http.Handler {
 func main() {
 	fmt.Println("Starting server on port 8080")
 
+	fs := http.FileServer(http.Dir("./static"))
+       http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	initDB(ENV_INIT_MODE == "true")
 
 	mux := http.NewServeMux()
@@ -67,7 +71,7 @@ func main() {
 	mux.HandleFunc("/api/register", apiRegister)
 	mux.HandleFunc("/api/weather", weatherHandler)
 	mux.HandleFunc("/api/logout", logoutHandler)
-	mux.HandleFunc("/frontend/login.html", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/login.html")
 	})
 
@@ -75,6 +79,10 @@ func main() {
 	handler := corsMiddleware(mux)
 
 	http.ListenAndServe(":8080", handler)
+}
+
+func init() {
+	mime.AddExtensionType(".css", "text/css")
 }
 
 func initDB(initMode bool) {
