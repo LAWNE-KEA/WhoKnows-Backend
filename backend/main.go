@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"encoding/hex"
 	"encoding/json"
-	"mime"
 	"fmt"
 	"io"
 	"log"
+	"mime"
 	"net/http"
 	"os"
 	"strings"
@@ -74,6 +74,9 @@ func main() {
 	mux.HandleFunc("/api/register", apiRegister)
 	mux.HandleFunc("/api/weather", weatherHandler)
 	mux.HandleFunc("/api/logout", logoutHandler)
+	mux.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/register.html")
+	})
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/login.html")
 	})
