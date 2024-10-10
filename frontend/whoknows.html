@@ -149,51 +149,6 @@
           .catch((error) => console.error("Error:", error));
       }
 
-      
-
-      
-
-      function handleRegister(event) {
-        event.preventDefault();
-        const username = document.getElementById("register-username").value;
-        const email = document.getElementById("register-email").value;
-        const password = document.getElementById("register-password").value;
-        const password2 = document.getElementById("register-password2").value;
-
-        fetch(`${BASE_URL}api/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            username: username,
-            email: email,
-            password: password,
-            password2: password2,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.error) {
-              document.getElementById(
-                "register-error"
-              ).innerText = `Error: ${data.error}`;
-              document.getElementById("register-error").style.display = "block";
-            } else {
-              alert("Registration successful! Please log in.");
-              toggleLoginVisible();
-            }
-          })
-          .catch((error) => {
-            document.getElementById(
-              "register-error"
-            ).innerText = `Error: ${error.message}`;
-            document.getElementById("register-error").style.display = "block";
-          });
-      }
-
-     
-
       function resetUIToLoggedOutState() {
         document.getElementById("nav-login").innerText = "Log in";
         document.getElementById("nav-register").style.display = "block";
@@ -209,8 +164,6 @@
 
         document.getElementById("nav-login").onclick = toggleLoginVisible;
       }
-
-
     </script>
   </body>
 </html>
