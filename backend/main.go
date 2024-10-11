@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io"
 	"log"
 	"mime"
 	"net/http"
@@ -20,11 +19,11 @@ import (
 )
 
 var tmpl = template.Must(template.ParseFiles(
-	"../frontend/layout.html",
-	"../frontend/search.html",
-	"../frontend/register.html",
-	"../frontend/login.html",
-	"../frontend/about.html",
+	"../app/frontend/layout.html",
+	"../app/frontend/search.html",
+	"../app/frontend/register.html",
+	"../app/frontend/login.html",
+	"../app/frontend/about.html",
 ))
 
 var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
@@ -103,16 +102,15 @@ func main() {
 	mux.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/search.html")
 	})
-	mux.HandleFunc("/", searchHandler)
-	mux.HandleFunc("/about", aboutHandler)
-	mux.HandleFunc("/login", loginHandler)
-	mux.HandleFunc("/register", registerHandler)
-	mux.HandleFunc("/logout", logoutHandler)
+	//mux.HandleFunc("/search", searchHandler)
+	//mux.HandleFunc("/about", aboutHandler)
+	//mux.HandleFunc("/login", loginHandler)
+	//mux.HandleFunc("/register", registerHandler)
+	//mux.HandleFunc("/logout", logoutHandler)
 	mux.HandleFunc("/api/search", apiSearchHandler)
 	mux.HandleFunc("/api/login", apiLoginHandler)
 	mux.HandleFunc("/api/register", apiRegisterHandler)
 
-	fs := http.FileServer(http.Dir("../frontend/static"))
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/about.html")
