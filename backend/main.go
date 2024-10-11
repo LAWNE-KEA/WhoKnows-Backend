@@ -61,7 +61,9 @@ func main() {
 	initDB(ENV_INIT_MODE == "true")
 
 	mux := http.NewServeMux()
-
+	mux.HandleFunc("/weather", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/weather.html")
+	})
 	mux.HandleFunc("/api/search", searchHandler)
 	mux.HandleFunc("/api/login", loginHandler)
 	mux.HandleFunc("/api/register", apiRegister)
