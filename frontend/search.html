@@ -1,40 +1,170 @@
-{{ define "body" }}
-<div>
-  <input id="search-input" placeholder="Search..." value="{{ .Query }}"/>
-  <button onclick="makeSearchRequest()">Search</button>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Who Knows?</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+  </head>
+  <body>
+    <div id="page" class="page" style="display: block">
+      <div class="navigation">
+        <nav>
+          <h1><a id="nav-logo">¿Who Knows?</a></h1>
+          <a id="nav-login" href="/login">Log in</a>
+          <a id="nav-register" href="#" onclick="toggleRegisterVisible()"
+            >Register</a
+          >
+        </nav>
+      </div>
+      <ul class="flashes" style="display: none"></ul>
+      <div class="body">
+        <div id="search-container">
+          <input id="search-input" placeholder="Search..." value="" />
+          <button onclick="makeSearchRequest()">Search</button>
+        </div>
 
-<div id="results">
-  {{ range .SearchResults }}
-  <div>
-      <h2><a class="search-result-title" href="{{ .URL }}">{{ .Title }}</a></h2>
-      <p class="search-result-description">{{ .Description }}</p>
-  </div>
-  {{ end }}
-</div>
+          </form>
+        </div>
+        <div id="register-container" style="display: none">
+          <h2>Sign Up</h2>
+          <div id="register-error" class="error" style="display: none"></div>
+          <form
+            id="registerForm"
+            action="http://localhost:8080/api/register"
+            method="POST"
+          >
+            <dl>
+              <dt>Username:</dt>
+              <dd>
+                <input
+                  type="text"
+                  name="username"
+                  id="register-username"
+                  size="30"
+                />
+              </dd>
+              <dt>Email:</dt>
+              <dd>
+                <input
+                  type="email"
+                  name="email"
+                  id="register-email"
+                  size="30"
+                />
+              </dd>
+              <dt>Password:</dt>
+              <dd>
+                <input
+                  type="password"
+                  name="password"
+                  id="register-password"
+                  size="30"
+                />
+              </dd>
+              <dt>Confirm Password:</dt>
+              <dd>
+                <input
+                  type="password"
+                  name="password2"
+                  id="register-password2"
+                  size="30"
+                />
+              </dd>
+            </dl>
+            <div class="actions"><input type="submit" value="Sign Up" /></div>
+          </form>
+        </div>
+        <div id="results"></div>
+      </div>
+      <div class="footer">
+        <span>¿Who Knows? &copy; 2009</span>
+        <a href="#">About</a>
+      </div>
+    </div>
 
-<script>
-  let searchInput;
+    <script>
+      let searchInput;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    searchInput = document.getElementById("search-input");
+      const BASE_URL = "http://localhost:8080/";
 
-    // Focus the input field
-    searchInput.focus();
+      document.addEventListener("DOMContentLoaded", () => {
+        searchInput = document.getElementById("search-input");
 
-    // Search when the user presses Enter
-    searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-          makeSearchRequest();
+        // Focus the input field
+        searchInput.focus();
+
+        // Search when the user presses Enter
+        searchInput.addEventListener("keypress", (event) => {
+          if (event.key === "Enter") {
+            makeSearchRequest();
+          }
+        });
+
+        // Add event listeners for login and register forms
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", handleLogin);
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", handleRegister);
+      });
+
+      function toggleLoginVisible() {
+        document.getElementById("results").innerHTML = "";
+        document.getElementById("login-container").style.display = "block";
+        document.getElementById("register-container").style.display = "none";
+        document.getElementById("search-container").style.display = "none";
+        document.getElementById("nav-login").innerText = "Search";
+        document.getElementById("nav-register").innerText = "Register";
+      }
+
+      function toggleRegisterVisible() {
+        document.getElementById("results").innerHTML = "";
+        document.getElementById("register-container").style.display = "block";
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("search-container").style.display = "none";
+        document.getElementById("nav-login").innerText = "Log in";
+        document.getElementById("nav-register").innerText = "Search";
+      }
+
+      function makeSearchRequest() {
+        const query = searchInput.value;
+        const url = new URL(`${BASE_URL}api/search`);
+        url.searchParams.set("q", query);
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((response) => {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            response.data.forEach((result) => {
+              const resultDiv = document.createElement("div");
+              resultDiv.innerHTML = `
+              <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
+            `;
+              resultsDiv.appendChild(resultDiv);
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+
+      function resetUIToLoggedOutState() {
+        document.getElementById("nav-login").innerText = "Log in";
+        document.getElementById("nav-register").style.display = "block";
+
+        const userInfo = document.getElementById("user-info");
+        if (userInfo) {
+          userInfo.remove();
         }
-    });
-  });
 
-  function makeSearchRequest() {
-    const query = searchInput.value;
-    const url = new URL(window.location.href);
-    url.searchParams.set('q', query);
-    window.location.href = url.toString();
-  }
-</script>
-{{ end }}
+        document.getElementById("search-container").style.display = "block";
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("register-container").style.display = "none";
+
+        document.getElementById("nav-login").onclick = toggleLoginVisible;
+      }
+    </script>
+  </body>
+</html>

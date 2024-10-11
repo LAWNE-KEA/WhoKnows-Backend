@@ -90,6 +90,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/search.html")
+	})
 	mux.HandleFunc("/", searchHandler)
 	mux.HandleFunc("/about", aboutHandler)
 	mux.HandleFunc("/login", loginHandler)
