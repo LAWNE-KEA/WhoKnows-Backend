@@ -1,0 +1,31 @@
+<!doctype html>
+<title>¿Who Knows?</title>
+<link rel="stylesheet" type="text/css" href="static/style.css">
+<div class="page">
+  <div class="navigation">
+  <nav>
+    <h1><a id="nav-logo" href="/search">¿Who Knows?</a></h1>
+    {{ if .User }}
+    <a id="nav-logout" href="/logout">Log out [{{ .User.Username }}]</a>
+    {{ else }}
+    <a id="nav-login" href="/login">Log in</a>
+    <a id="nav-register" href="/register">Register</a>
+    {{ end }}
+  </nav>
+  {{ with .Flashes }}
+    {{ if . }}
+      <ul class="flashes">
+      {{ range . }}
+        <li>{{ . }}</li>
+      {{ end }}
+      </ul>
+    {{ end }}
+  {{ end }}
+  <div class="body">
+  {{ block "body" . }}{{ end }}
+  </div>
+  <div class="footer">
+    <span>¿Who Knows? &copy; 2009</span>
+    <a href="/about">About</a>
+  </div>
+</div>

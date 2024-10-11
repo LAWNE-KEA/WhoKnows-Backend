@@ -12,7 +12,7 @@ services:
     networks:
       - mynetwork
     healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 20s
       timeout: 10s
       retries: 1
@@ -39,5 +39,4 @@ networks:
 
 volumes:
   mysql_data:
-
 # when done docker compose down

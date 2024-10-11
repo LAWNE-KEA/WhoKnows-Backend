@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"mime"
@@ -18,10 +19,37 @@ import (
 	"github.com/google/uuid"
 )
 
+var tmpl = template.Must(template.ParseFiles(
+	"../frontend/layout.html",
+	"../frontend/search.html",
+	"../frontend/register.html",
+	"../frontend/login.html",
+	"../frontend/about.html",
+))
+
 var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
 var ENV_MYSQL_PASSWORD, _ = os.LookupEnv("ENV_MYSQL_PASSWORD")
 var ENV_INIT_MODE, _ = os.LookupEnv("ENV_INIT_MODE")
 var DATABASE_PATH = ENV_MYSQL_USER + ":" + ENV_MYSQL_PASSWORD + "@(mysql_db:3306)/whoknows"
+
+type PageData struct {
+	User          *User
+	Flashes       []string
+	Query         string
+	SearchResults []SearchResult
+	Error         string
+	Form          map[string]string
+}
+
+type User struct {
+	Username string
+}
+
+type SearchResult struct {
+	URL         string
+	Title       string
+	Description string
+}
 
 type session struct {
 	userID   int
@@ -39,23 +67,24 @@ var sessionStore = map[string]session{}
 
 // Middleware to handle CORS
 func corsMiddleware(next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        origin := r.Header.Get("Origin")
-        w.Header().Set("Access-Control-Allow-Origin", origin)
-        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-        w.Header().Set("Access-Control-Allow-Credentials", "true")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
 
-        // Handle preflight requests
-        if r.Method == http.MethodOptions {
-            w.WriteHeader(http.StatusOK)
-            return
-        }
+		// Handle preflight requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
 
-        next.ServeHTTP(w, r)
-    })
+		next.ServeHTTP(w, r)
+	})
 }
-// Run the server on port 8000
+
+// Run the server on port 8080
 func main() {
 	fmt.Println("Starting server on port 8080")
 
@@ -71,11 +100,20 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/root.html")
 	})
-	mux.HandleFunc("/api/search", searchHandler)
-	mux.HandleFunc("/api/login", loginHandler)
-	mux.HandleFunc("/api/register", apiRegister)
-	mux.HandleFunc("/api/weather", weatherHandler)
-	mux.HandleFunc("/api/logout", logoutHandler)
+	mux.HandleFunc("/search", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "/app/frontend/search.html")
+	})
+	mux.HandleFunc("/", searchHandler)
+	mux.HandleFunc("/about", aboutHandler)
+	mux.HandleFunc("/login", loginHandler)
+	mux.HandleFunc("/register", registerHandler)
+	mux.HandleFunc("/logout", logoutHandler)
+	mux.HandleFunc("/api/search", apiSearchHandler)
+	mux.HandleFunc("/api/login", apiLoginHandler)
+	mux.HandleFunc("/api/register", apiRegisterHandler)
+
+	fs := http.FileServer(http.Dir("../frontend/static"))
+	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "/app/frontend/about.html")
 	})
@@ -170,7 +208,6 @@ func parseSQLCommands(sqlCommands string) []string {
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-	// enableCors(&w)
 	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
 		log.Fatal(err)
@@ -178,27 +215,221 @@ func searchHandler(w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 	query := r.FormValue("q")
-	if query == "" {
-		http.Error(w, "Missing query parameter 'q'", http.StatusBadRequest)
-		return
-	}
-
 	language := r.FormValue("language")
 	if language == "" {
 		language = "en"
 	}
 
-	rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
+	var searchResults []SearchResult
+	if query != "" {
+		rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		searchResults = make([]SearchResult, len(rows))
+		for i, row := range rows {
+			searchResults[i] = SearchResult{
+				URL:         row["url"].(string),
+				Title:       row["title"].(string),
+				Description: row["description"].(string),
+			}
+		}
+	}
+
+	data := PageData{
+		Query:         query,
+		SearchResults: searchResults,
+	}
+
+	tmpl.ExecuteTemplate(w, "search.html", data)
+}
+
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	data := PageData{
+		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+		Flashes: []string{"Welcome to the About page!"},
+	}
+	tmpl.ExecuteTemplate(w, "about.html", data)
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	data := PageData{
+		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+		Flashes: []string{"Please log in."},
+	}
+	tmpl.ExecuteTemplate(w, "login.html", data)
+}
+
+func registerHandler(w http.ResponseWriter, r *http.Request) {
+	data := PageData{
+		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+		Flashes: []string{"Please register."},
+	}
+	tmpl.ExecuteTemplate(w, "register.html", data)
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	sessionID, err := r.Cookie("session_id")
+	if err != nil {
+		http.Error(w, "No active session", http.StatusBadRequest)
+		return
+	}
+
+	delete(sessionStore, sessionID.Value)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session_id",
+		Value:    "",
+		Expires:  time.Now().Add(-1 * time.Hour),
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func apiSearchHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", DATABASE_PATH)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
-	response := map[string]interface{}{
-		"data": rows,
+	query := r.FormValue("q")
+	language := r.FormValue("language")
+	if language == "" {
+		language = "en"
+	}
+
+	var searchResults []SearchResult
+	if query != "" {
+		rows, err := queryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		searchResults = make([]SearchResult, len(rows))
+		for i, row := range rows {
+			searchResults[i] = SearchResult{
+				URL:         row["url"].(string),
+				Title:       row["title"].(string),
+				Description: row["description"].(string),
+			}
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(response)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"search_results": searchResults,
+	})
+}
+
+func apiLoginHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", DATABASE_PATH)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	var storedHash string
+	err = db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedHash)
+	if err != nil {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	if !verifyPassword(storedHash, password) {
+		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+
+	sessionID := uuid.New().String()
+	expirationTime := time.Now().Add(24 * time.Hour)
+	sessionStore[sessionID] = session{userID: 1, username: username, expiry: expirationTime}
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "session_id",
+		Value:    sessionID,
+		Expires:  expirationTime,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   false,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message":    "Logged in successfully",
+		"statusCode": http.StatusOK,
+		"username":   username,
+		"sessionID":  sessionID,
+	})
+}
+
+func apiRegisterHandler(w http.ResponseWriter, r *http.Request) {
+	db, err := sql.Open("mysql", DATABASE_PATH)
+	if err != nil {
+		http.Error(w, "Database connection error", http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	username := r.FormValue("username")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	password2 := r.FormValue("password2")
+
+	var errorMsg string
+	if username == "" {
+		errorMsg = "You have to enter a username"
+	} else if email == "" || !strings.Contains(email, "@") {
+		errorMsg = "You have to enter a valid email address"
+	} else if password == "" {
+		errorMsg = "You have to enter a password"
+	} else if password != password2 {
+		errorMsg = "The two passwords do not match"
+	} else {
+		// Check if username already exists
+		_, err := getUserID(db, username)
+		if err == nil {
+			errorMsg = "The username is already taken"
+		} else if err != sql.ErrNoRows {
+			// An unexpected error occurred
+			log.Printf("Error checking username: %v", err)
+			http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
+			return
+		} else {
+			// Username is available, proceed with registration
+			hashedPassword := hashPassword(password)
+			_, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashedPassword)
+			if err != nil {
+				log.Printf("Error inserting new user: %v", err)
+				http.Error(w, "Failed to register user", http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(map[string]string{"message": "Registered successfully"})
+			return
+		}
+	}
+
+	if errorMsg != "" {
+		data := PageData{
+			Error: errorMsg,
+			Form: map[string]string{
+				"Username": username,
+				"Email":    email,
+			},
+		}
+		tmpl.ExecuteTemplate(w, "register.html", data)
+		return
+	}
 }
 
 func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interface{}, error) {
@@ -247,80 +478,6 @@ func queryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interf
 	return result, nil
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Received %s request for /api/login", r.Method)
-
-	if r.Method != http.MethodPost {
-			log.Printf("Invalid request method: %s", r.Method)
-			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-			return
-	}
-
-	err := r.ParseForm()
-	if err != nil {
-			log.Printf("Error parsing form: %v", err)
-			http.Error(w, "Error parsing form data", http.StatusBadRequest)
-			return
-	}
-
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-
-	if username == "" || password == "" {
-			log.Printf("Missing username or password")
-			http.Error(w, "Missing username or password", http.StatusBadRequest)
-			return
-	}
-
-	 // Validate the username and password against the database
-	 db, err := sql.Open("mysql", DATABASE_PATH)
-	 if err != nil {
-			 log.Fatal(err)
-	 }
-	 defer db.Close()
-
-	 var storedHash string
-	 err = db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedHash)
-	 if err != nil {
-			 http.Error(w, "Invalid username or password", http.StatusUnauthorized)
-			 return
-	 }
-
-	 if !verifyPassword(storedHash, password) {
-			 http.Error(w, "Invalid username or password", http.StatusUnauthorized)
-			 return
-	 }
-
-	sessionID := uuid.New().String()
-	expirationTime := time.Now().Add(24 * time.Hour)
-	sessionStore[sessionID] = session{userID: 1, username: username, expiry: expirationTime}
-
-	http.SetCookie(w, &http.Cookie{
-			Name:     "session_id",
-			Value:    sessionID,
-			Expires:  expirationTime,
-			Path:     "/",
-			HttpOnly: false, // Set to false for debugging
-			Secure:   false, // Set to true if using HTTPS
-			SameSite: http.SameSiteLaxMode,
-	})
-
-	log.Printf("Login successful. Session ID: %s, Username: %s", sessionID, username)
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-			"message":    "Logged in successfully",
-			"statusCode": http.StatusOK,
-			"username":   username,
-			"sessionID":  sessionID,
-	})
-}
-
-func verifyPassword(storedHash, password string) bool {
-	hash := md5.Sum([]byte(password))
-	return storedHash == hex.EncodeToString(hash[:])
-}
-
 func getUserID(db *sql.DB, username string) (int, error) {
 	var id int
 	err := db.QueryRow("SELECT id FROM users WHERE username = ?", username).Scan(&id)
@@ -335,165 +492,7 @@ func hashPassword(password string) string {
 	return hex.EncodeToString(hash[:])
 }
 
-func apiRegister(w http.ResponseWriter, r *http.Request) {
-    // enableCors(&w)
-    if r.Method != http.MethodPost {
-        http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-        return
-    }
-
-    db, err := sql.Open("mysql", DATABASE_PATH)
-    if err != nil {
-        http.Error(w, "Database connection error", http.StatusInternalServerError)
-        return
-    }
-    defer db.Close()
-
-    username := r.FormValue("username")
-    email := r.FormValue("email")
-    password := r.FormValue("password")
-    password2 := r.FormValue("password2")
-
-    var errorMsg string
-    if username == "" {
-        errorMsg = "You have to enter a username"
-    } else if email == "" || !strings.Contains(email, "@") {
-        errorMsg = "You have to enter a valid email address"
-    } else if password == "" {
-        errorMsg = "You have to enter a password"
-    } else if password != password2 {
-        errorMsg = "The two passwords do not match"
-    } else {
-        // Check if username already exists
-        _, err := getUserID(db, username)
-        if err == nil {
-            errorMsg = "The username is already taken"
-        } else if err != sql.ErrNoRows {
-            // An unexpected error occurred
-            log.Printf("Error checking username: %v", err)
-            http.Error(w, "An unexpected error occurred", http.StatusInternalServerError)
-            return
-        } else {
-            // Username is available, proceed with registration
-            hashedPassword := hashPassword(password)
-            _, err := db.Exec("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", username, email, hashedPassword)
-            if err != nil {
-                log.Printf("Error inserting new user: %v", err)
-                http.Error(w, "Failed to register user", http.StatusInternalServerError)
-                return
-            }
-            w.WriteHeader(http.StatusOK)
-            json.NewEncoder(w).Encode(map[string]string{"message": "Registered successfully"})
-            return
-        }
-    }
-
-    if errorMsg != "" {
-        w.WriteHeader(http.StatusBadRequest)
-        json.NewEncoder(w).Encode(map[string]string{"error": errorMsg})
-        return
-    }
-}
-
-func apiWeather(city string, apiKey string)(*WeatherResponse, error) {
-	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, apiKey)
-	resp, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var weatherResponse WeatherResponse
-	err = json.Unmarshal(body, &weatherResponse)
-	if err != nil {
-		return nil, err
-	}
-
-	return &weatherResponse, nil
-}
-
-func weatherHandler(w http.ResponseWriter, r *http.Request) {
-	city := "Copenhagen"
-	apiKey := "c7b29c23b93f65b6b249176790112875"
-	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s", city, apiKey)
-	resp, err := http.Get(url)
-	if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(body)
-}
-
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Received %s request for /api/logout", r.Method)
-
-	if r.Method != http.MethodPost {
-			log.Printf("Invalid request method: %s", r.Method)
-			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-			return
-	}
-
-	// Log all cookies
-	for _, cookie := range r.Cookies() {
-			log.Printf("Received cookie: %s=%s", cookie.Name, cookie.Value)
-	}
-
-	var requestBody struct {
-			SessionID string `json:"sessionID"`
-	}
-
-	err := json.NewDecoder(r.Body).Decode(&requestBody)
-	if err != nil {
-			log.Printf("Error decoding request body: %v", err)
-			http.Error(w, "Error decoding request body", http.StatusBadRequest)
-			return
-	}
-
-	sessionID := requestBody.SessionID
-	log.Printf("Received session ID from request body: %s", sessionID)
-
-	if sessionID == "" {
-			log.Printf("No session ID provided in request body")
-			http.Error(w, "No active session", http.StatusBadRequest)
-			return
-	}
-
-	// Remove the session from the server-side store
-	if _, exists := sessionStore[sessionID]; !exists {
-			log.Printf("Session not found in sessionStore: %s", sessionID)
-			http.Error(w, "Invalid session", http.StatusBadRequest)
-			return
-	}
-	delete(sessionStore, sessionID)
-
-	// Expire the client-side cookie
-	http.SetCookie(w, &http.Cookie{
-			Name:     "session_id",
-			Value:    "",
-			Expires:  time.Now().Add(-1 * time.Hour), // Set expiration in the past
-			Path:     "/",
-			HttpOnly: false, // Changed to false for debugging
-			Secure:   false, // Set to true if using HTTPS
-			SameSite: http.SameSiteLaxMode, // Changed to Lax
-	})
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-			"message": "Logged out successfully",
-	})
-	log.Printf("Logout successful for session: %s", sessionID)
+func verifyPassword(storedHash, password string) bool {
+	hash := md5.Sum([]byte(password))
+	return storedHash == hex.EncodeToString(hash[:])
 }
