@@ -19,7 +19,7 @@ import (
 )
 
 var tmpl = template.Must(template.ParseFiles(
-	"../app/frontend/layout.html",
+	"../app/frontend/root.html",
 	"../app/frontend/search.html",
 	"../app/frontend/register.html",
 	"../app/frontend/login.html",
@@ -88,7 +88,7 @@ func main() {
 	fmt.Println("Starting server on port 8080")
 
 	fs := http.FileServer(http.Dir("./static"))
-       http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	initDB(ENV_INIT_MODE == "true")
 
@@ -124,7 +124,7 @@ func main() {
 
 	// Apply CORS middleware
 	handler := corsMiddleware(mux)
- 
+
 	http.ListenAndServe(":8080", handler)
 }
 
@@ -311,10 +311,23 @@ func apiSearchHandler(w http.ResponseWriter, r *http.Request) {
 
 		searchResults = make([]SearchResult, len(rows))
 		for i, row := range rows {
+			url, ok := row["url"].(string)
+			if !ok {
+				url = ""
+			}
+			title, ok := row["title"].(string)
+			if !ok {
+				title = ""
+			}
+			description, ok := row["description"].(string)
+			if !ok {
+				description = ""
+			}
+
 			searchResults[i] = SearchResult{
-				URL:         row["url"].(string),
-				Title:       row["title"].(string),
-				Description: row["description"].(string),
+				URL:         url,
+				Title:       title,
+				Description: description,
 			}
 		}
 	}
