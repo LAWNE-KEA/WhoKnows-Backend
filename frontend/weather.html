@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather Page</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Weather</h1>
+      <div id="weather-data">
+        <p id="temperature"></p>
+        <p id="description"></p>
+        <p id="location"></p>
+      </div>
+      <div id="error-message"></div>
+    </div>
+    <script>
+        const API_KEY = "c7b29c23b93f65b6b249176790112875";
+const API_URL = "https://api.openweathermap.org/data/2.5/weather";
+
+
+function getWeatherData(city) {
+  const url = new URL(API_URL);
+  url.searchParams.set("q", city);
+  url.searchParams.set("appid", API_KEY);
+  url.searchParams.set("units", "metric");
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.cod === "404") {
+        document.getElementById("error-message").innerText = "City not found";
+        return;
+      }
+
+      const temperature = data.main.temp;
+      const description = data.weather[0].description;
+      const location = data.name;
+
+      document.getElementById("temperature").innerText = `Temperature: ${temperature}°C`;
+      document.getElementById("description").innerText = `Description: ${description}`;
+      document.getElementById("location").innerText = `Location: ${location}`;
+
+      document.getElementById("error-message").innerText = "";
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+getWeatherData("Copenhagen");
+    </script>
+  </body>
+</html>
