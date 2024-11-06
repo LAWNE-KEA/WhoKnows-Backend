@@ -44,6 +44,9 @@ jobs:
         curl -fsSL https://get.docker.com -o get-docker.sh
         sudo sh get-docker.sh
 
+        # Pull latest changes from GitHub
+        ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'git pull'
+
         # Build and deploy Docker image
         docker build -t my-app ./backend
         docker save my-app | bzip2 | ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'docker load && docker run -d my-app'
