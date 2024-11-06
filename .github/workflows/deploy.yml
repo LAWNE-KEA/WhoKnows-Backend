@@ -49,7 +49,7 @@ jobs:
           sudo sh get-docker.sh
 
           # Clear GO chache
-          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@100.25.126.145 'rm -rf /root/.cache/go-build/*'
+          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@100.25.126.145 'sudo rm -rf /root/.cache/go-build/*'
 
           # Build and deploy Docker image
           docker build -t my-app ./backend
