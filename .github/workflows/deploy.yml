@@ -31,9 +31,16 @@ jobs:
           echo "$EC2_SSH_KEY" > ec2_ssh_key.pem
           chmod 600 ec2_ssh_key.pem
 
+      - name: Get public IP address of EC2 instance
+        id: get_public_ip
+        run: |
+          PUBLIC_IP=$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+          echo "PUBLIC_IP=$PUBLIC_IP" >> $GITHUB_ENV
+
       - name: Clean up Go build cache
         run: |
-          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'rm -rf /root/.cache/go-build/*'
+          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$PUBLIC_IP 'rm -rf /root/.cache/go-build/*'
+
       - name: Deploy to EC2
         env:
           EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
