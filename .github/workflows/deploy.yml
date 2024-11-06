@@ -31,10 +31,6 @@ jobs:
           echo "$EC2_SSH_KEY" > ec2_ssh_key.pem
           chmod 600 ec2_ssh_key.pem
 
-      - name: Clean up Go build cache
-        run: |
-          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@100.25.126.145 'rm -rf /root/.cache/go-build/*'
-
       - name: Deploy to EC2
         env:
           EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
@@ -51,6 +47,9 @@ jobs:
           # Install Docker
           curl -fsSL https://get.docker.com -o get-docker.sh
           sudo sh get-docker.sh
+
+          # Clear GO chache
+          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@100.25.126.145 'rm -rf /root/.cache/go-build/*'
 
           # Build and deploy Docker image
           docker build -t my-app ./backend
