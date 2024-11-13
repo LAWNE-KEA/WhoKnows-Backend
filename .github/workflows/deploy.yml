@@ -53,5 +53,5 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
         
         # Deploy using Docker Compose
-        scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/
+        scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no compose.yml $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/
         ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'docker-compose up -d'
