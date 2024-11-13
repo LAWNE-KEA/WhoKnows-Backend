@@ -39,6 +39,7 @@
 
     <script>
 function loginSuccess(data) {
+      const BASE_URL = "http://www.lawne.dk/";
         if (!data || !data.username) {
           console.error("Invalid login data:", data);
           throw new Error("Invalid login data");
