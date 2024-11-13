@@ -35,10 +35,7 @@ jobs:
       env:
         EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
         SSH_USER: ubuntu # Replace with your EC2 instance SSH user
-      run: |          
-          scp -i ec2_ssh_key.pem -r ./* $SSH_USER@$EC2_INSTANCE_ID:/home/$SSH_USER/
-          ssh -i ec2_ssh_key.pem $SSH_USER@$EC2_INSTANCE_ID << 'EOF'
-            cd /home/$SSH_USER/
-            docker-compose down
-            docker-compose up -d
-          EOF
+      run: |
+        # Deploy using Docker Compose
+        scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no docker-compose.yml $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/
+        ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'docker-compose down && docker-compose up -d'
