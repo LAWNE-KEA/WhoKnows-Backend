@@ -25,12 +25,19 @@ jobs:
           echo "$EC2_SSH_KEY" > ec2_ssh_key.pem
           chmod 600 ec2_ssh_key.pem
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Copy code to EC2
-        run: scp StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} ubuntu@${{ secrets.EC2_IP_ADDRESS }}:/whoknows
+        run: scp StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/whoknows
 
       - name: SSH into EC2 and run commands
         run: |
-          ssh StrictHostKeyChecking=no -i ec2_ssh_key.pem ubuntu@ec2-${{ secrets.EC2_IP_ADDRESS }} << EOF
+          ssh StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) << EOF
             cd /whoknows
             docker-compose down
             docker-compose up -d
