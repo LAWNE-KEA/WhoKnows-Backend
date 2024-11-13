@@ -15,7 +15,6 @@ RUN go mod download
 COPY go.sum .
 COPY schema.sql .
 COPY main.go .
-COPY frontend /app/frontend
 
 RUN go build -o /whoknows
  
