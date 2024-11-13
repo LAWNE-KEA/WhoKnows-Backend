@@ -19,7 +19,7 @@ services:
 
   app:
     build:
-      context: ./WhoKnows-Backend/backend
+      context: ./backend
       dockerfile: Dockerfile
     restart: "no"
     ports:
