@@ -12,7 +12,7 @@
         <nav>
           <h1><a id="nav-logo">¿Who Knows?</a></h1>
           <a id="nav-login" href="/login">Log in</a>
-          <a id="nav-register" href="#" onclick="toggleRegisterVisible()"
+          <a id="nav-register" href="/register"
             >Register</a
           >
         </nav>
@@ -25,56 +25,6 @@
         </div>
 
           </form>
-        </div>
-        <div id="register-container" style="display: none">
-          <h2>Sign Up</h2>
-          <div id="register-error" class="error" style="display: none"></div>
-          <form
-            id="registerForm"
-            action="http://www.lawne.dk/api/register"
-            method="POST"
-          >
-            <dl>
-              <dt>Username:</dt>
-              <dd>
-                <input
-                  type="text"
-                  name="username"
-                  id="register-username"
-                  size="30"
-                />
-              </dd>
-              <dt>Email:</dt>
-              <dd>
-                <input
-                  type="email"
-                  name="email"
-                  id="register-email"
-                  size="30"
-                />
-              </dd>
-              <dt>Password:</dt>
-              <dd>
-                <input
-                  type="password"
-                  name="password"
-                  id="register-password"
-                  size="30"
-                />
-              </dd>
-              <dt>Confirm Password:</dt>
-              <dd>
-                <input
-                  type="password"
-                  name="password2"
-                  id="register-password2"
-                  size="30"
-                />
-              </dd>
-            </dl>
-            <div class="actions"><input type="submit" value="Sign Up" /></div>
-          </form>
-        </div>
         <div id="results"></div>
       </div>
       <div class="footer">
@@ -110,23 +60,6 @@
           .addEventListener("submit", handleRegister);
       });
 
-      function toggleLoginVisible() {
-        document.getElementById("results").innerHTML = "";
-        document.getElementById("login-container").style.display = "block";
-        document.getElementById("register-container").style.display = "none";
-        document.getElementById("search-container").style.display = "none";
-        document.getElementById("nav-login").innerText = "Search";
-        document.getElementById("nav-register").innerText = "Register";
-      }
-
-      function toggleRegisterVisible() {
-        document.getElementById("results").innerHTML = "";
-        document.getElementById("register-container").style.display = "block";
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("search-container").style.display = "none";
-        document.getElementById("nav-login").innerText = "Log in";
-        document.getElementById("nav-register").innerText = "Search";
-      }
 
       function makeSearchRequest() {
         const query = searchInput.value;
@@ -138,7 +71,7 @@
           .then((response) => {
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = "";
-            response.data.forEach((result) => {
+            response.search_results.forEach((result) => {
               const resultDiv = document.createElement("div");
               resultDiv.innerHTML = `
               <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
