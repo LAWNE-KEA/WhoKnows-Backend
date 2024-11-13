@@ -12,7 +12,9 @@
         <nav>
           <h1><a id="nav-logo">¿Who Knows?</a></h1>
           <a id="nav-login" href="#" onclick="toggleLoginVisible()">Log in</a>
-          <a id="nav-register" href="#" onclick="toggleRegisterVisible()">Register</a>
+          <a id="nav-register" href="#" onclick="toggleRegisterVisible()"
+            >Register</a
+          >
         </nav>
       </div>
       <ul class="flashes" style="display: none"></ul>
@@ -24,19 +26,39 @@
             <dl>
               <dt>Username:</dt>
               <dd>
-                <input type="text" name="username" id="register-username" size="30" />
+                <input
+                  type="text"
+                  name="username"
+                  id="register-username"
+                  size="30"
+                />
               </dd>
               <dt>Email:</dt>
               <dd>
-                <input type="email" name="email" id="register-email" size="30" />
+                <input
+                  type="email"
+                  name="email"
+                  id="register-email"
+                  size="30"
+                />
               </dd>
               <dt>Password:</dt>
               <dd>
-                <input type="password" name="password" id="register-password" size="30" />
+                <input
+                  type="password"
+                  name="password"
+                  id="register-password"
+                  size="30"
+                />
               </dd>
               <dt>Confirm Password:</dt>
               <dd>
-                <input type="password" name="password2" id="register-password2" size="30" />
+                <input
+                  type="password"
+                  name="password2"
+                  id="register-password2"
+                  size="30"
+                />
               </dd>
             </dl>
             <div class="actions">
@@ -48,10 +70,12 @@
     </div>
 
     <script>
-      const BASE_URL = "http://localhost:8080/";
+      const BASE_URL = "http://www.lawne.dk/api/register/";
 
       document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("registerForm").addEventListener("submit", handleRegister);
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", handleRegister);
       });
 
       function handleRegister(event) {
@@ -76,7 +100,9 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.error) {
-              document.getElementById("register-error").innerText = `Error: ${data.error}`;
+              document.getElementById(
+                "register-error"
+              ).innerText = `Error: ${data.error}`;
               document.getElementById("register-error").style.display = "block";
             } else {
               alert("Registration successful! Please log in.");
@@ -84,7 +110,9 @@
             }
           })
           .catch((error) => {
-            document.getElementById("register-error").innerText = `Error: ${error.message}`;
+            document.getElementById(
+              "register-error"
+            ).innerText = `Error: ${error.message}`;
             document.getElementById("register-error").style.display = "block";
           });
       }
