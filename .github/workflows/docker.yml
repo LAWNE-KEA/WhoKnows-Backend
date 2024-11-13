@@ -1,23 +1,26 @@
 name: Deploy to EC2
-
 on:
   push:
     branches:
       - main
   workflow_dispatch:
   
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Install SSH
         run: sudo apt-get install openssh-client
         
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Replace with your desired AWS region
+
       - name: Import EC2 SSH Key
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -25,20 +28,20 @@ jobs:
           echo "$EC2_SSH_KEY" > ec2_ssh_key.pem
           chmod 600 ec2_ssh_key.pem
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-
       - name: Copy code to EC2
-        run: scp StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/whoknows
+        env:
+          EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
+          SSH_USER: ubuntu # Replace with your EC2 instance SSH user
+        run: |
+          scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/whoknows
 
       - name: SSH into EC2 and run commands
+        env:
+          EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
+          SSH_USER: ubuntu # Replace with your EC2 instance SSH user
         run: |
-          ssh StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) << EOF
-            cd /whoknows
+          ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) << EOF
+            cd /home/$SSH_USER/whoknows
             docker-compose down
             docker-compose up -d
           EOF
