@@ -33,7 +33,7 @@ jobs:
           EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
           SSH_USER: ubuntu # Replace with your EC2 instance SSH user
         run: |
-          scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/whoknows
+          scp -i ec2_ssh_key.pem --exclude=".git" -o StrictHostKeyChecking=no -r ${{ github.workspace }} $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/whoknows
 
       - name: SSH into EC2 and run commands
         env:
