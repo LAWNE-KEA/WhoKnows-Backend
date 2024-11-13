@@ -26,11 +26,11 @@ jobs:
           chmod 600 ec2_ssh_key.pem
 
       - name: Copy code to EC2
-        run: scp -i ec2_ssh_key.pem -r ${{ github.workspace }} ubuntu@${{ secrets.EC2_IP_ADDRESS }}:/whoknows
+        run: scp StrictHostKeyChecking=no -i ec2_ssh_key.pem -r ${{ github.workspace }} ubuntu@${{ secrets.EC2_IP_ADDRESS }}:/whoknows
 
       - name: SSH into EC2 and run commands
         run: |
-          ssh -i ec2_ssh_key.pem ubuntu@ec2-${{ secrets.EC2_IP_ADDRESS }} << EOF
+          ssh StrictHostKeyChecking=no -i ec2_ssh_key.pem ubuntu@ec2-${{ secrets.EC2_IP_ADDRESS }} << EOF
             cd /whoknows
             docker-compose down
             docker-compose up -d
