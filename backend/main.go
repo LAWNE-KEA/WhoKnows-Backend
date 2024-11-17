@@ -19,11 +19,11 @@ import (
 )
 
 var tmpl = template.Must(template.ParseFiles(
-	"../app/frontend/root.html",
-	"../app/frontend/search.html",
-	"../app/frontend/register.html",
-	"../app/frontend/login.html",
-	"../app/frontend/about.html",
+	"./app/frontend/root.html",
+	"./app/frontend/search.html",
+	"./app/frontend/register.html",
+	"./app/frontend/login.html",
+	"./app/frontend/about.html",
 ))
 
 var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
