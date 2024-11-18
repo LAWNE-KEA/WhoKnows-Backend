@@ -1,8 +1,11 @@
 package services
 
 import (
+	"errors"
 	"fmt"
+	"time"
 	"whoKnows/models"
+	"whoKnows/security"
 
 	"gorm.io/gorm"
 )
@@ -11,7 +14,7 @@ func CreateUser(db *gorm.DB, user *models.User) error {
 	err := db.Create(user).Error
 
 	if err != nil {
-		fmt.Errorf("error creating user. Error: %s. User: %s", err, user)
+		fmt.Printf("error creating user. Error: %s. User: %s", err, user.Username)
 	}
 	return nil
 }
@@ -50,7 +53,7 @@ func UpdateUser(db *gorm.DB, user *models.User) error {
 	err := db.Save(user).Error
 
 	if err != nil {
-		fmt.Errorf("error updating user. Error: %s. User: %s", err, user)
+		fmt.Printf("error updating user. Error: %s. User: %s", err, user.Username)
 	}
 	return nil
 }
@@ -59,16 +62,28 @@ func DeleteUser(db *gorm.DB, user *models.User) error {
 	err := db.Delete(user).Error
 
 	if err != nil {
-		fmt.Errorf("error deleting user. Error: %s. User: %s", err, user)
+		fmt.Printf("error deleting user. Error: %s. User: %s", err, user.Username)
 	}
 	return nil
 }
 
 func UpdateLastActive(db *gorm.DB, user *models.User) error {
-	err := db.Model(user).Update("last_active", user.LastActive).Error
+	err := db.Model(user).Update("last_active", time.Now()).Error
 
 	if err != nil {
-		fmt.Errorf("error updating user last active. Error: %s. User: %s", err, user)
+		fmt.Printf("error updating last active. Error: %s. User: %s", err, user.Username)
 	}
 	return nil
+}
+
+func CheckPassword(db *gorm.DB, username, password string) (*models.User, bool, error) {
+	user, err := GetUserByUsername(db, username)
+	if err != nil {
+		return nil, false, errors.New("invalid username or password")
+	}
+	if !security.VerifyPassword(user.Password, password) {
+		return nil, false, errors.New("invalid username or password")
+	}
+
+	return user, true, nil
 }

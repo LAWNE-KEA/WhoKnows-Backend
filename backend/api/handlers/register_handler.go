@@ -23,7 +23,7 @@ type RegisterRequest struct {
 var validate = validator.New()
 
 // Create a new User in the database
-func ApiRegisterHandler(w http.ResponseWriter, r *http.Request) {
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
@@ -48,7 +48,7 @@ func ApiRegisterHandler(w http.ResponseWriter, r *http.Request) {
 		Email:    req.Email,
 	}
 
-	if err := services.CreateUser(database.DBConnection, &user); err != nil {
+	if err := services.CreateUser(database.Connection, &user); err != nil {
 		http.Error(w, "Error creating user", http.StatusInternalServerError)
 		fmt.Println("Error creating user: ", err)
 		return

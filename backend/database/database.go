@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var dbConnection *gorm.DB
+var Connection *gorm.DB
 
 // Initializes the db connection
 func InitDatabase() error {
@@ -27,7 +27,7 @@ func InitDatabase() error {
 	)
 
 	var err error
-	dbConnection, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Connection, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return fmt.Errorf("error connecting to database: %s", err)
 	}
@@ -43,7 +43,7 @@ func InitDatabase() error {
 
 // migrates the database schema to the latest version
 func Migrate() error {
-	m := gormigrate.New(dbConnection, gormigrate.DefaultOptions, []*gormigrate.Migration{
+	m := gormigrate.New(Connection, gormigrate.DefaultOptions, []*gormigrate.Migration{
 		{
 			ID: time.Now().Format("20060102"),
 			Migrate: func(tx *gorm.DB) error {

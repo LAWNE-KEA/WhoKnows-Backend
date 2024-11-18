@@ -4,6 +4,7 @@ import "time"
 
 type SearchLog struct {
 	ID        uint   `gorm:"primaryKey"`
-	Search    string `gorm:"type:varchar(255);not null"`
+	Query     string `gorm:"type:varchar(255);not null"`
+	Count     int    `gorm:"not null;default:0"`
 	CreatedAt time.Time
 }

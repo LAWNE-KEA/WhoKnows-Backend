@@ -1,25 +1,53 @@
-version: '3.8'
+volumes:
+  postgres_data:
+
+networks:
+  WhoKnows-LAWNE:
+    driver: bridge
+
 services:
-  app:
+  backend:
+    container_name: backend
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
+    # environment:
+    #   - API_DATABASE_HOST=${API_DATABASE_HOST}
+    #   - API_DATABASE_PORT=${API_DATABASE_PORT}
+    #   - API_DATABASE_USER=${API_DATABASE_USER}
+    #   - API_DATABASE_PASSWORD=${API_DATABASE_PASSWORD}
+    #   - API_DATABASE_NAME=${API_DATABASE_NAME}
+    #   - API_DATABASE_SSL_MODE=${API_DATABASE_SSL_MODE}
+    #   - API_DATABASE_MIGRATE=${API_DATABASE_MIGRATE}
+    #   - API_JWT_SECRET=${API_JWT_SECRET}
+    #   - API_JWT_EXPIRATION=${API_JWT_EXPIRATION}
+    #   - API_WEATHER_API_KEY=${API_WEATHER_API_KEY}
     ports:
-      - 8080:8080
+      - "8080:8080"
+    volumes:
+      - ./backend:/app:delegated
+    networks:
+      - WhoKnows-LAWNE
     depends_on:
       - db
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
-    ports:
-      - 5432:5432
-    volumes:
-      - db_data:/var/lib/postgresql/data
 
-volumes:
-  db_data:
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=whoKnows
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - WhoKnows-LAWNE
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 20s
+      timeout: 10s
+      retries: 1
 
 # Ill get back to this later

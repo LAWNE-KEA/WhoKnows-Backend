@@ -1,117 +1,93 @@
 package handlers
 
 import (
-	"database/sql"
-	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"text/template"
-
+	"strings"
+	"whoKnows/api/services"
+	"whoKnows/database"
+	"whoKnows/helperTypes"
 	"whoKnows/models"
 
-	_ "github.com/go-sql-driver/mysql"
+	"gorm.io/gorm"
 )
 
-var tmpl = template.Must(template.ParseFiles(
-	"../app/frontend/root.html",
-	"../app/frontend/search.html",
-	"../app/frontend/register.html",
-	"../app/frontend/login.html",
-	"../app/frontend/about.html",
-))
-
-func ApiSearchHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open("mysql", DATABASE_PATH)
-	if err != nil {
-		log.Fatal(err)
+func SearchHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+	lang := r.URL.Query().Get("language")
+	if query == "" {
+		http.Error(w, "Query parameter is required", http.StatusBadRequest)
+		return
 	}
-	defer db.Close()
+	if lang == "" {
+		lang = "en"
+	}
+	searchLog := logSearch(query)
+	fmt.Println("Query:", query)
 
-	query := r.FormValue("q")
-	language := r.FormValue("language")
-	if language == "" {
-		language = "en"
+	var pages []models.PageData
+	results := database.Connection.Where("language = ? AND title ILIKE ?", lang, "%"+query+"%").Order("title")
+	if err := results.Find(&pages).Error; err != nil {
+		http.Error(w, "Error getting search results", http.StatusInternalServerError)
+		return
 	}
 
-	var searchResults []models.PageData
-	if query != "" {
-		rows, err := QueryDB(db, "SELECT * FROM pages WHERE language = ? AND content LIKE ?", language, "%"+query+"%")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		searchResults = make([]models.PageData, len(rows))
-		for i, row := range rows {
-			url, ok := row["url"].(string)
-			if !ok {
-				url = ""
-			}
-			title, ok := row["title"].(string)
-			if !ok {
-				title = ""
-			}
-			content, ok := row["content"].(string)
-			if !ok {
-				content = ""
-			}
-
-			searchResults[i] = models.PageData{
-				Url:     url,
-				Title:   title,
-				Content: content,
-			}
+	body := helperTypes.SearchResponse{
+		Data: make([]map[string]interface{}, len(pages)),
+	}
+	for i, page := range pages {
+		body.Data[i] = map[string]interface{}{
+			"id":       page.ID,
+			"content":  page.Content,
+			"language": page.Language,
+			"title":    page.Title,
+			"url":      page.Url,
+			"snippet":  getSnippet(page.Content, query),
 		}
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"search_results": searchResults,
-	})
+	response := map[string]interface{}{
+		"status":  "success",
+		"message": "Search results",
+		"data":    body,
+		"results": len(pages),
+		"hits":    searchLog.Count + 1,
+	}
+
+	services.ResponseSuccess(w, response, http.StatusOK)
 }
 
-func QueryDB(db *sql.DB, query string, args ...interface{}) ([]map[string]interface{}, error) {
-	rows, err := db.Query(query, args...)
-	fmt.Println("Query:", query, "Args:", args)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	columns, err := rows.Columns()
-	if err != nil {
-		return nil, err
-	}
-
-	result := make([]map[string]interface{}, 0)
-	for rows.Next() {
-		values := make([]interface{}, len(columns))
-		pointers := make([]interface{}, len(columns))
-		for i := range values {
-			pointers[i] = &values[i]
+func logSearch(query string) models.SearchLog {
+	db := database.Connection
+	var searchLog models.SearchLog
+	if err := db.Where("query = ?", query).First(&searchLog).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			services.CreateSearchLog(db, &models.SearchLog{Query: query})
+			fmt.Println("Record does not exist")
+			return models.SearchLog{Query: query}
+		} else {
+			fmt.Println("Error:", err.Error())
+			return models.SearchLog{}
 		}
-
-		if err := rows.Scan(pointers...); err != nil {
-			return nil, err
-		}
-
-		row := make(map[string]interface{})
-		for i, colName := range columns {
-			val := values[i]
-			b, ok := val.([]byte)
-			if ok {
-				row[colName] = string(b)
-			} else {
-				row[colName] = val
-			}
-		}
-
-		result = append(result, row)
+	} else {
+		searchLog.Count++
+		db.Save(&searchLog)
+		fmt.Println("Record exists")
 	}
+	fmt.Println("Search existing, incrementing count")
+	return searchLog
+}
 
-	if err := rows.Err(); err != nil {
-		return nil, err
+// Needs improvement but good enough for now
+func getSnippet(content, query string) string {
+	index := strings.Index(content, query)
+	if index == -1 {
+		return ""
 	}
-
-	return result, nil
+	start := index + len(query)
+	end := start + 100
+	if end > len(content) {
+		end = len(content)
+	}
+	return content[start:end]
 }

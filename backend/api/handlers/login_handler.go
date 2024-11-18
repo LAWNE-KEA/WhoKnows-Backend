@@ -1,64 +1,63 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
-	"log"
 	"net/http"
-	"os"
-	"time"
 
-	"github.com/google/uuid"
-
+	"whoKnows/api/services"
+	"whoKnows/database"
 	"whoKnows/security"
 )
 
-var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
-var ENV_MYSQL_PASSWORD, _ = os.LookupEnv("ENV_MYSQL_PASSWORD")
-var ENV_INIT_MODE, _ = os.LookupEnv("ENV_INIT_MODE")
-var DATABASE_PATH = ENV_MYSQL_USER + ":" + ENV_MYSQL_PASSWORD + "@(mysql_db:3306)/whoknows"
+type LoginRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
-func ApiLoginHandler(w http.ResponseWriter, r *http.Request) {
-	db, err := sql.Open("mysql", DATABASE_PATH)
+type LoginResponse struct {
+	Message string `json:"message"`
+	Status  string `json:"status"`
+	Token   string `json:"token"`
+}
+
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	var loginRequest LoginRequest
+	err := json.NewDecoder(r.Body).Decode(&loginRequest)
 	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	username := r.FormValue("username")
-	password := r.FormValue("password")
-
-	var storedHash string
-	err = db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedHash)
-	if err != nil {
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		services.ResponseError(w, "invalid request", http.StatusBadRequest)
 		return
 	}
 
-	if !security.VerifyPassword(storedHash, password) {
-		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+	if loginRequest.Username == "" || loginRequest.Password == "" {
+		services.ResponseError(w, "username and password are required", http.StatusBadRequest)
 		return
 	}
 
-	sessionID := uuid.New().String()
-	expirationTime := time.Now().Add(24 * time.Hour)
-	//sessionStore[sessionID] = session{userID: 1, username: username, expiry: expirationTime}
+	user, check, err := services.CheckPassword(database.Connection, loginRequest.Username, loginRequest.Password)
+	if err != nil || !check {
+		services.ResponseError(w, "invalid username or password", http.StatusInternalServerError)
+		return
+	}
 
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session_id",
-		Value:    sessionID,
-		Expires:  expirationTime,
-		Path:     "/",
-		HttpOnly: true,
-		Secure:   false,
-		SameSite: http.SameSiteLaxMode,
-	})
+	token, err := security.CreateJWT(user.ID, user.Username)
+	if err != nil {
+		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		return
+	}
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]interface{}{
-		"message":    "Logged in successfully",
-		"statusCode": http.StatusOK,
-		"username":   username,
-		"sessionID":  sessionID,
-	})
+	response := LoginResponse{
+		Message: "Login successful",
+		Status:  "success",
+		Token:   token,
+	}
+
+	services.ResponseSuccess(w,
+		map[string]interface{}{
+			"status":  response.Status,
+			"message": response.Message,
+			"data":    response,
+		},
+		http.StatusOK,
+	)
+
 }
