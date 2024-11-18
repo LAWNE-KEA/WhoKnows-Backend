@@ -5,8 +5,6 @@ import (
 	"html/template"
 	"mime"
 	"net/http"
-	"os"
-	"strings"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -14,6 +12,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 
+	"whoKnows/api/handlers"
+	"whoKnows/api/middleware"
 	"whoKnows/models"
 )
 
@@ -25,21 +25,13 @@ var tmpl = template.Must(template.ParseFiles(
 	"../app/frontend/about.html",
 ))
 
-var ENV_MYSQL_USER, _ = os.LookupEnv("ENV_MYSQL_USER")
-var ENV_MYSQL_PASSWORD, _ = os.LookupEnv("ENV_MYSQL_PASSWORD")
-var ENV_INIT_MODE, _ = os.LookupEnv("ENV_INIT_MODE")
-var DATABASE_PATH = ENV_MYSQL_USER + ":" + ENV_MYSQL_PASSWORD + "@(mysql_db:3306)/whoknows"
+// to fix the css issue see: https://stackoverflow.com/questions/13302020/rendering-css-in-a-go-web-application or https://stackoverflow.com/questions/43601359/how-do-i-serve-css-and-js-in-go for a newer solution
 
-//var sessionStore = map[string]session{}
-
-// Run the server on port 8080
 func main() {
 	fmt.Println("Starting server on port 8080")
 
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
-
-	initDB(ENV_INIT_MODE == "true")
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/weather", func(w http.ResponseWriter, r *http.Request) {
@@ -52,13 +44,9 @@ func main() {
 		http.ServeFile(w, r, "/app/frontend/search.html")
 	})
 
-	//mux.HandleFunc("/about", aboutHandler)
-	//mux.HandleFunc("/login", loginHandler)
-	//mux.HandleFunc("/register", registerHandler)
-	//mux.HandleFunc("/logout", logoutHandler)
-	mux.HandleFunc("/api/search", apiSearchHandler)
-	mux.HandleFunc("/api/login", apiLoginHandler)
-	mux.HandleFunc("/api/register", apiRegisterHandler)
+	mux.HandleFunc("/api/search", handlers.ApiSearchHandler)
+	mux.HandleFunc("/api/login", handlers.ApiLoginHandler)
+	mux.HandleFunc("/api/register", handlers.ApiRegisterHandler)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", fs))
 	mux.HandleFunc("/about", func(w http.ResponseWriter, r *http.Request) {
@@ -72,7 +60,7 @@ func main() {
 	})
 
 	// Apply CORS middleware
-	handler := corsMiddleware(mux)
+	handler := middleware.CorsMiddleware(mux)
 
 	// Create a non-global registry.
 	reg := prometheus.NewRegistry()
@@ -93,72 +81,65 @@ func init() {
 	mime.AddExtensionType(".css", "text/css")
 }
 
-func parseSQLCommands(sqlCommands string) []string {
-	var commands []string
-	var currentCommand strings.Builder
-	inSingleQuote := false
-	inDoubleQuote := false
+// func parseSQLCommands(sqlCommands string) []string {
+// 	var commands []string
+// 	var currentCommand strings.Builder
+// 	inSingleQuote := false
+// 	inDoubleQuote := false
 
-	for _, char := range sqlCommands {
-		switch char {
-		case '\'':
-			if !inDoubleQuote {
-				inSingleQuote = !inSingleQuote
-			}
-		case '"':
-			if !inSingleQuote {
-				inDoubleQuote = !inDoubleQuote
-			}
-		case ';':
-			if !inSingleQuote && !inDoubleQuote {
-				commands = append(commands, currentCommand.String())
-				currentCommand.Reset()
-				continue
-			}
-		}
-		currentCommand.WriteRune(char)
-	}
+// 	for _, char := range sqlCommands {
+// 		switch char {
+// 		case '\'':
+// 			if !inDoubleQuote {
+// 				inSingleQuote = !inSingleQuote
+// 			}
+// 		case '"':
+// 			if !inSingleQuote {
+// 				inDoubleQuote = !inDoubleQuote
+// 			}
+// 		case ';':
+// 			if !inSingleQuote && !inDoubleQuote {
+// 				commands = append(commands, currentCommand.String())
+// 				currentCommand.Reset()
+// 				continue
+// 			}
+// 		}
+// 		currentCommand.WriteRune(char)
+// 	}
 
-	// Add the last command if any
-	if currentCommand.Len() > 0 {
-		commands = append(commands, currentCommand.String())
-	}
+// 	// Add the last command if any
+// 	if currentCommand.Len() > 0 {
+// 		commands = append(commands, currentCommand.String())
+// 	}
 
-	return commands
-}
+// 	return commands
+// }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	data := models.PageData{
-		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+	data := models.ResonseObject{
+		User:    &models.User{Username: "JohnDoe"}, // Example user, replace with actual user data
 		Flashes: []string{"Welcome to the About page!"},
 	}
 	tmpl.ExecuteTemplate(w, "about.html", data)
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	data := models.PageData{
-		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+	data := models.ResonseObject{
+		User:    &models.User{Username: "JohnDoe"}, // Example user, replace with actual user data
 		Flashes: []string{"Please log in."},
 	}
 	tmpl.ExecuteTemplate(w, "login.html", data)
 }
 
 func registerHandler(w http.ResponseWriter, r *http.Request) {
-	data := models.PageData{
-		User:    &User{Username: "JohnDoe"}, // Example user, replace with actual user data
+	data := models.ResonseObject{
+		User:    &models.User{Username: "JohnDoe"}, // Example user, replace with actual user data
 		Flashes: []string{"Please register."},
 	}
 	tmpl.ExecuteTemplate(w, "register.html", data)
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	sessionID, err := r.Cookie("session_id")
-	if err != nil {
-		http.Error(w, "No active session", http.StatusBadRequest)
-		return
-	}
-
-	delete(sessionStore, sessionID.Value)
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session_id",
