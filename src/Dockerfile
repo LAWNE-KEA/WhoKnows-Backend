@@ -1,19 +1,21 @@
-FROM golang:latest
- 
+FROM golang:1.23 AS builder
+
 WORKDIR /app
 
-
 COPY go.mod go.sum ./
- 
+
 RUN go mod download
- 
 
-COPY go.sum .
-COPY schema.sql .
-COPY main.go .
+COPY . .
 
-RUN go build -o /whoknows
- 
+RUN go build -o main .
+
+FROM ubuntu:24.10
+
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/main .
+
 EXPOSE 8080
- 
-CMD [ "/whoknows" ]
+
+ENTRYPOINT ["./main"]

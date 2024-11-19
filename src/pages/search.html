@@ -27,10 +27,10 @@
           </form>
         <div id="results"></div>
       </div>
-      <div class="footer">
+      <footer>
         <span>¿Who Knows? &copy; 2009</span>
         <a href="#">About</a>
-      </div>
+      </footer>
     </div>
 
     <script>
@@ -50,14 +50,6 @@
             makeSearchRequest();
           }
         });
-
-        // Add event listeners for login and register forms
-        document
-          .getElementById("loginForm")
-          .addEventListener("submit", handleLogin);
-        document
-          .getElementById("registerForm")
-          .addEventListener("submit", handleRegister);
       });
 
 

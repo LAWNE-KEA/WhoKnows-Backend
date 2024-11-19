@@ -77,3 +77,12 @@ button:active {
   background-color: #e0e0e0;
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f1f1f1; /* Optional: Add background color */
+  text-align: center; /* Optional: Center the text */
+  padding: 10px 0; /* Optional: Add padding */
+}
