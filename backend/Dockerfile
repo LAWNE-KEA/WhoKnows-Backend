@@ -2,16 +2,12 @@ FROM golang:latest
  
 WORKDIR /app
 
-ENV ENV_MYSQL_USER=root
-ENV ENV_MYSQL_PASSWORD=root
-ENV ENV_INIT_MODE=true
 
-# Effectively tracks changes within your go.mod file
-COPY go.mod .
+COPY go.mod go.sum ./
  
 RUN go mod download
  
-# Copies your source code into the app directory
+
 COPY go.sum .
 COPY schema.sql .
 COPY main.go .

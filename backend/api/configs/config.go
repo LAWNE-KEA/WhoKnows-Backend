@@ -11,8 +11,8 @@ import (
 var EnvConfig Config
 
 func LoadEnv() error {
-	// path := os.Getenv("ENV_FILE_PATH")
-	path := "../.env"
+	path := os.Getenv("ENV_FILE_PATH")
+	// path := "../.env"
 
 	if path != "" {
 		if err := godotenv.Load(path); err != nil {

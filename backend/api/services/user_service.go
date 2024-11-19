@@ -16,7 +16,7 @@ func CreateUser(db *gorm.DB, user *models.User) error {
 	if err != nil {
 		fmt.Printf("error creating user. Error: %s. User: %s", err, user.Username)
 	}
-	return nil
+	return err
 }
 
 func GetUserByUsername(db *gorm.DB, username string) (*models.User, error) {

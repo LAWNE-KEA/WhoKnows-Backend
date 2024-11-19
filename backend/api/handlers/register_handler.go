@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"whoKnows/api/services"
 	"whoKnows/database"
@@ -26,19 +27,19 @@ var validate = validator.New()
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		fmt.Println("Invalid request payload. Got: ", req)
+		services.ResponseError(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
 	if err := validate.Struct(req); err != nil {
-		http.Error(w, "Validation failed: "+err.Error(), http.StatusBadRequest)
+		services.ResponseError(w, "Validation failed: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	hashedPassword, err := security.HashPassword(req.Password)
 	if err != nil {
-		http.Error(w, "Error hashing password", http.StatusInternalServerError)
+		services.ResponseError(w, "Error hashing password", http.StatusInternalServerError)
 		return
 	}
 
@@ -49,20 +50,20 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := services.CreateUser(database.Connection, &user); err != nil {
-		http.Error(w, "Error creating user", http.StatusInternalServerError)
-		fmt.Println("Error creating user: ", err)
-		return
+		if strings.Contains(err.Error(), "duplicate key value") {
+			services.ResponseError(w, "Username or email already in use", http.StatusBadRequest)
+			return
+		} else {
+			services.ResponseError(w, "Error creating user", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	// if errorMsg != "" {
-	// 	data := types.ResonseObject{
-	// 		Error: errorMsg,
-	// 		Form: map[string]string{
-	// 			"Username": username,
-	// 			"Email":    email,
-	// 		},
-	// 	}
-	// 	tmpl.ExecuteTemplate(w, "register.html", data)
-	// 	return
-	// }
+	response := map[string]interface{}{
+		"status":  "success",
+		"message": "User created successfully",
+		"user":    user.Username,
+	}
+
+	services.ResponseSuccess(w, response, http.StatusOK)
 }

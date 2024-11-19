@@ -14,12 +14,6 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-type LoginResponse struct {
-	Message string `json:"message"`
-	Status  string `json:"status"`
-	Token   string `json:"token"`
-}
-
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var loginRequest LoginRequest
 	err := json.NewDecoder(r.Body).Decode(&loginRequest)
@@ -41,21 +35,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	token, err := security.CreateJWT(user.ID, user.Username)
 	if err != nil {
-		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		services.ResponseError(w, "error creating token", http.StatusInternalServerError)
 		return
-	}
-
-	response := LoginResponse{
-		Message: "Login successful",
-		Status:  "success",
-		Token:   token,
 	}
 
 	services.ResponseSuccess(w,
 		map[string]interface{}{
-			"status":  response.Status,
-			"message": response.Message,
-			"data":    response,
+			"status":  "success",
+			"message": "Login successful",
+			"token":   token,
 		},
 		http.StatusOK,
 	)

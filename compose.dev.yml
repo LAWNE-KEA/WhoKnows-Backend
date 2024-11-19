@@ -10,18 +10,19 @@ services:
     container_name: backend
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    # environment:
-    #   - API_DATABASE_HOST=${API_DATABASE_HOST}
-    #   - API_DATABASE_PORT=${API_DATABASE_PORT}
-    #   - API_DATABASE_USER=${API_DATABASE_USER}
-    #   - API_DATABASE_PASSWORD=${API_DATABASE_PASSWORD}
-    #   - API_DATABASE_NAME=${API_DATABASE_NAME}
-    #   - API_DATABASE_SSL_MODE=${API_DATABASE_SSL_MODE}
-    #   - API_DATABASE_MIGRATE=${API_DATABASE_MIGRATE}
-    #   - API_JWT_SECRET=${API_JWT_SECRET}
-    #   - API_JWT_EXPIRATION=${API_JWT_EXPIRATION}
-    #   - API_WEATHER_API_KEY=${API_WEATHER_API_KEY}
+      dockerfile: Dockerfile.dev
+    environment:
+        - ENV_DATABASE_USER=user
+        - ENV_DATABASE_PASSWORD=password
+        - ENV_DATABASE_PORT=5432
+        - ENV_DATABASE_NAME=whoKnows
+        - ENV_DATABASE_MIGRATE=true
+        - ENV_DATABASE_HOST=db
+        - ENV_DATABASE_SSLMODE=disable
+        - ENV_FILE_PATH=
+        - ENV_JWT_SECRET=6234075679ba4f52af635d54d1e03a8c2a0e14f76ec88716e7ef1264da29e6eb
+        - ENV_JWT_EXPIRY=3600
+        - ENV_WEATHER_API_KEY=c7b29c23b93f65b6b249176790112875
     ports:
       - "8080:8080"
     volumes:
@@ -45,9 +46,11 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
-      interval: 20s
-      timeout: 10s
-      retries: 1
+      test: ["CMD-SHELL", "pg_isready -U user -d whoKnows"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
 
 # Ill get back to this later

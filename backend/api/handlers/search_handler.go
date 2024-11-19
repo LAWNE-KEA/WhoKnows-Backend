@@ -80,11 +80,11 @@ func logSearch(query string) models.SearchLog {
 
 // Needs improvement but good enough for now
 func getSnippet(content, query string) string {
-	index := strings.Index(content, query)
+	index := strings.Index(strings.ToLower(content), strings.ToLower(query))
 	if index == -1 {
 		return ""
 	}
-	start := index + len(query)
+	start := index
 	end := start + 100
 	if end > len(content) {
 		end = len(content)
