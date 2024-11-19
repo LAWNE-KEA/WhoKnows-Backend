@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Who Knows?</title>
+    <link rel="stylesheet" type="text/css" href="styles/style.css" />
+  </head>
+  <body>
+    <div id="page" class="page" style="display: block">
+      <div class="navigation">
+        <nav>
+          <h1><a id="nav-logo" href="/">¿Who Knows?</a></h1>
+          <a id="nav-login" href="/login">Log in</a>
+          <a id="nav-register" href="/register"
+            >Register</a
+          >
+        </nav>
+      </div>
+      <ul class="flashes" style="display: none"></ul>
+      <div class="body">
+        <div id="search-container">
+          <input id="search-input" placeholder="Search..." value="" />
+          <button onclick="makeSearchRequest()">Search</button>
+        </div>
+
+          </form>
+        <div id="results"></div>
+      </div>
+      <div class="footer">
+        <span>¿Who Knows? &copy; 2009</span>
+        <a href="#">About</a>
+      </div>
+    </div>
+
+    <script>
+      let searchInput;
+
+      const BASE_URL = "http://www.lawne.dk/";
+
+      document.addEventListener("DOMContentLoaded", () => {
+        searchInput = document.getElementById("search-input");
+
+        // Focus the input field
+        searchInput.focus();
+
+        // Search when the user presses Enter
+        searchInput.addEventListener("keypress", (event) => {
+          if (event.key === "Enter") {
+            makeSearchRequest();
+          }
+        });
+
+        // Add event listeners for login and register forms
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", handleLogin);
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", handleRegister);
+      });
+
+
+      function makeSearchRequest() {
+        const query = searchInput.value;
+        const url = new URL(`${BASE_URL}api/search`);
+        url.searchParams.set("q", query);
+
+        fetch(url)
+          .then((response) => response.json())
+          .then((response) => {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+            response.search_results.forEach((result) => {
+              const resultDiv = document.createElement("div");
+              resultDiv.innerHTML = `
+              <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
+            `;
+              resultsDiv.appendChild(resultDiv);
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+
+      function resetUIToLoggedOutState() {
+        document.getElementById("nav-login").innerText = "Log in";
+        document.getElementById("nav-register").style.display = "block";
+
+        const userInfo = document.getElementById("user-info");
+        if (userInfo) {
+          userInfo.remove();
+        }
+
+        document.getElementById("search-container").style.display = "block";
+        document.getElementById("login-container").style.display = "none";
+        document.getElementById("register-container").style.display = "none";
+
+        document.getElementById("nav-login").onclick = toggleLoginVisible;
+      }
+    </script>
+  </body>
+</html>
