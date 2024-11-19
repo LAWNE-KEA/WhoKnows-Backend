@@ -1,7 +1,9 @@
 package api
 
 import (
+	"mime"
 	"net/http"
+	"path/filepath"
 
 	"whoKnows/api/handlers"
 
@@ -40,5 +42,22 @@ func setApiRoutes(mux *mux.Router) {
 }
 
 func setFileRoutes(mux *mux.Router) {
-	mux.HandleFunc("/", handlers.HomeHandler)
+	mux.HandleFunc("/", handlers.ServeHome)
+	mux.HandleFunc("/about", handlers.ServeAbout)
+	mux.HandleFunc("/search", handlers.ServeSearch)
+	mux.HandleFunc("/register", handlers.ServeRegister)
+	mux.HandleFunc("/login", handlers.ServeLogin)
+	mux.PathPrefix("/static/").Handler(http.StripPrefix("/static/", customFileServer(http.Dir("./static/"))))
+}
+
+func customFileServer(root http.FileSystem) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set MIME type based on file extension
+		if ext := filepath.Ext(r.URL.Path); ext != "" {
+			if mimeType := mime.TypeByExtension(ext); mimeType != "" {
+				w.Header().Set("Content-Type", mimeType)
+			}
+		}
+		http.FileServer(root).ServeHTTP(w, r)
+	})
 }
