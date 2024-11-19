@@ -19,6 +19,8 @@ services:
         - ENV_DATABASE_MIGRATE=true
         - ENV_DATABASE_HOST=db
         - ENV_DATABASE_SSLMODE=disable
+        - ENV_DATABASE_SEED=true
+        - ENV_DATABASE_SEED_FILE=/app/database/seeds/seed.json
         - ENV_FILE_PATH=
         - ENV_JWT_SECRET=6234075679ba4f52af635d54d1e03a8c2a0e14f76ec88716e7ef1264da29e6eb
         - ENV_JWT_EXPIRY=3600

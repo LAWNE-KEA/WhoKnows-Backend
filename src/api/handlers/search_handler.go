@@ -26,7 +26,7 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Query:", query)
 
 	var pages []models.PageData
-	results := database.Connection.Where("language = ? AND title ILIKE ?", lang, "%"+query+"%").Order("title")
+	results := database.Connection.Where("language like ? AND title ILIKE ?", lang, "%"+query+"%").Order("title")
 	if err := results.Find(&pages).Error; err != nil {
 		http.Error(w, "Error getting search results", http.StatusInternalServerError)
 		return

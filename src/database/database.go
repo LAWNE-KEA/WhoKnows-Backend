@@ -1,7 +1,10 @@
 package database
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 	"time"
 
 	"whoKnows/api/configs"
@@ -34,6 +37,10 @@ func InitDatabase() error {
 
 	fmt.Println("Database connected")
 
+	if configs.EnvConfig.Database.Seed {
+		seedData()
+	}
+
 	if configs.EnvConfig.Database.Migrate {
 		return Migrate()
 	}
@@ -57,9 +64,53 @@ func Migrate() error {
 
 	err := m.Migrate()
 	if err != nil {
-		return fmt.Errorf("error migrating database: %s", err)
+		return fmt.Errorf("error migrating database: s", err)
 	}
 
 	fmt.Println("Schema migrated successfully")
 	return nil
+}
+
+func seedData() {
+	fmt.Println("Seeding data")
+	// Open the JSON file
+	fmt.Println("Seed file: ", configs.EnvConfig.Database.SeedFile)
+	jsonFile, err := os.Open(configs.EnvConfig.Database.SeedFile)
+	if err != nil {
+		fmt.Println("error opening JSON file: ", err)
+		return
+	}
+	defer jsonFile.Close()
+
+	// Read the JSON file
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		fmt.Println("error reading JSON file: ", err)
+		return
+	}
+
+	// Unmarshal the JSON data into a slice of PageData
+	var pageDataList []models.PageData
+	err = json.Unmarshal(byteValue, &pageDataList)
+	if err != nil {
+		fmt.Println("error unmarshalling JSON data: ", err)
+		return
+	}
+
+	// Insert each PageData object into the database
+	for _, pageData := range pageDataList {
+		if pageData.Language == "" {
+			pageData.Language = "en"
+		}
+		if pageData.Title == "" || pageData.Url == "" || pageData.Content == "" {
+			fmt.Println("error seeding data: invalid data")
+		} else {
+			err = Connection.Create(&pageData).Error
+			if err != nil {
+				fmt.Println("error seeding data:", err)
+			}
+		}
+	}
+
+	fmt.Println("Data seeded successfully")
 }
