@@ -47,8 +47,12 @@ jobs:
             git checkout origin/main -- compose.prod.yml
 
             # Set environment variables directly in OS (no need for .env)
+            echo "Setting environment variables..."
+            echo "ENV_DATABASE_USER=${{ secrets.ENV_DATABASE_USER }}"
             export ENV_DATABASE_USER="${{ secrets.ENV_DATABASE_USER }}"
+            echo "ENV_DATABASE_PASSWORD=${{ secrets.ENV_DATABASE_PASSWORD }}"
             export ENV_DATABASE_PASSWORD="${{ secrets.ENV_DATABASE_PASSWORD }}"
+            echo "ENV_DATABASE_NAME=${{ secrets.ENV_DATABASE_NAME }}"
             export ENV_DATABASE_NAME="${{ secrets.ENV_DATABASE_NAME }}"
             export ENV_DATABASE_SSLMODE="${{ secrets.API_DATABASE_SSL_MODE }}"
             export ENV_DATABASE_MIGRATE="${{ secrets.ENV_DATABASE_MIGRATE }}"
