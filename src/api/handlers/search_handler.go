@@ -35,6 +35,7 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	body := helperTypes.SearchResponse{
 		Data: make([]map[string]interface{}, len(pages)),
 	}
+	
 	for i, page := range pages {
 		body.Data[i] = map[string]interface{}{
 			"id":       page.ID,

@@ -17,6 +17,7 @@ import (
 //
 // Returns:
 //  - A sanitized string with control characters removed, whitespace normalized, and special characters escaped.
+
 func SanitizeValue(value string) string {
 	if !utf8.ValidString(value) {
 		value = strings.ToValidUTF8(value, "")

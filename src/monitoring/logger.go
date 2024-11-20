@@ -31,6 +31,7 @@ var allowedLogFields = map[string]bool{
 //
 // Returns:
 //   - *logrus.Logger: A pointer to the configured logrus.Logger instance.
+
 func NewLogger(logLevel string, logFormat string) *logrus.Logger {
 	logger := logrus.New()
 
@@ -63,7 +64,6 @@ func InitGlobalLogger(logLevel, logFormat string) {
 	Logger = NewLogger(logLevel, logFormat)
 }
 
-
 // cleanFields sanitizes the provided log fields by retaining only the allowed fields
 // and redacting the rest. The values of the allowed fields are sanitized using the
 // SanitizeValue function.
@@ -74,6 +74,7 @@ func InitGlobalLogger(logLevel, logFormat string) {
 // Returns:
 //   logrus.Fields: The sanitized log fields with only allowed fields retained and
 //   their values sanitized, while the rest are redacted.
+
 func cleanFields(fields logrus.Fields) logrus.Fields {
 	sanitizedFields := make(logrus.Fields)
 	for key, value := range fields {

@@ -1,0 +1,90 @@
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:07:01Z"}
+time="2024-11-20T16:07:01Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:07:01Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:07:01Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:07:01Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:10:35Z"}
+time="2024-11-20T16:10:35Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:10:35Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:10:35Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:10:35Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:11:57Z"}
+time="2024-11-20T16:11:57Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:11:57Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:11:57Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:11:57Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:05Z"}
+time="2024-11-20T16:12:05Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:05Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:05Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:05Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:07Z"}
+time="2024-11-20T16:12:07Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:07Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:07Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:07Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:22Z"}
+time="2024-11-20T16:12:22Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:22Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:22Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:22Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:24Z"}
+time="2024-11-20T16:12:24Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:24Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:24Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:24Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:28Z"}
+time="2024-11-20T16:12:28Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:28Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:28Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:28Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:12:42Z"}
+time="2024-11-20T16:12:42Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:12:42Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:12:42Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:12:42Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:13:02Z"}
+time="2024-11-20T16:13:02Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:13:02Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:13:02Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:13:02Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:13:06Z"}
+time="2024-11-20T16:13:06Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:13:06Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:13:06Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:13:06Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:13:27Z"}
+time="2024-11-20T16:13:27Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:13:27Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:13:27Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:13:27Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:13:57Z"}
+time="2024-11-20T16:13:57Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:13:57Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:13:57Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:13:57Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:14:02Z"}
+time="2024-11-20T16:14:02Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:14:02Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:14:02Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:14:02Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:14:05Z"}
+time="2024-11-20T16:14:05Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:14:05Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:14:05Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:14:05Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:14:21Z"}
+time="2024-11-20T16:14:21Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:14:21Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:14:21Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:14:21Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:14:23Z"}
+time="2024-11-20T16:14:23Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:14:23Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:14:23Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:14:23Z" level=info msg="Prometheus metrics server started on port 9090"
+{"level":"info","msg":"Logger initialized for early application setup","time":"2024-11-20T16:14:24Z"}
+time="2024-11-20T16:14:24Z" level=info msg="Logger initialized" logFormat="<REDACTED>" logLevel="<REDACTED>"
+time="2024-11-20T16:14:24Z" level=info msg="Registering Prometheus metrics"
+time="2024-11-20T16:14:24Z" level=info msg="Prometheus metrics registered successfully"
+time="2024-11-20T16:14:24Z" level=info msg="Prometheus metrics server started on port 9090"
