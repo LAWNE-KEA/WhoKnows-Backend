@@ -49,12 +49,12 @@ func NewLogger(logLevel string, logFormat string) *logrus.Logger {
 	}
 
 	// Open a file for writing logs
-	file, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err == nil {
-			logger.SetOutput(file)
-	} else {
-			logger.SetOutput(os.Stdout)
-	}
+	// file, err := os.OpenFile("logs.txt", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	// if err == nil {
+	// 		logger.SetOutput(file)
+	// } else {
+	logger.SetOutput(os.Stdout)
+	// }
 
 	return logger
 }
@@ -63,17 +63,18 @@ func InitGlobalLogger(logLevel, logFormat string) {
 	Logger = NewLogger(logLevel, logFormat)
 }
 
-
 // cleanFields sanitizes the provided log fields by retaining only the allowed fields
 // and redacting the rest. The values of the allowed fields are sanitized using the
 // SanitizeValue function.
 //
 // Parameters:
-//   fields (logrus.Fields): The log fields to be sanitized.
+//
+//	fields (logrus.Fields): The log fields to be sanitized.
 //
 // Returns:
-//   logrus.Fields: The sanitized log fields with only allowed fields retained and
-//   their values sanitized, while the rest are redacted.
+//
+//	logrus.Fields: The sanitized log fields with only allowed fields retained and
+//	their values sanitized, while the rest are redacted.
 func cleanFields(fields logrus.Fields) logrus.Fields {
 	sanitizedFields := make(logrus.Fields)
 	for key, value := range fields {
