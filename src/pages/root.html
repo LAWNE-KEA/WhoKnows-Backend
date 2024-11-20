@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Root Page</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <div class="navigation">
+        <nav>
+          <h1><a id="nav-logo">¿Who Knows?</a></h1>
+          <a id="nav-login" href="/login">Log in</a>
+          <a id="nav-register" href="/register" 
+            >Register</a
+          >
+        </nav>
+      </div>
+      <ul class="flashes" style="display: none"></ul>
+      <div class="body">
+        <!-- Add your content here -->
+        <h1>Welcome to ¿Who Knows? TEST</h1>
+        <p>This is the default page when accessing our website.</p>
+
+        <button onclick="window.location.href='/search'">Search</button>
+        <button onclick="window.location.href='/about'">About</button>
+      </div>
+      <footer >
+        <span>¿Who Knows? &copy; 2009</span>
+        <a href="/about">About</a>
+      </footer>
+    </div>
+  </body>
+</html>

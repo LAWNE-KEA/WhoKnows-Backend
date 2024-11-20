@@ -1,0 +1,58 @@
+volumes:
+  postgres_data:
+
+networks:
+  WhoKnows-LAWNE:
+    driver: bridge
+
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./src
+      dockerfile: Dockerfile.dev
+    environment:
+        - ENV_DATABASE_USER=user
+        - ENV_DATABASE_PASSWORD=password
+        - ENV_DATABASE_PORT=5432
+        - ENV_DATABASE_NAME=whoKnows
+        - ENV_DATABASE_MIGRATE=true
+        - ENV_DATABASE_HOST=db
+        - ENV_DATABASE_SSLMODE=disable
+        - ENV_DATABASE_SEED=true
+        - ENV_DATABASE_SEED_FILE=/app/database/seeds/seed.json
+        - ENV_FILE_PATH=
+        - ENV_JWT_SECRET=6234075679ba4f52af635d54d1e03a8c2a0e14f76ec88716e7ef1264da29e6eb
+        - ENV_JWT_EXPIRY=3600
+        - ENV_WEATHER_API_KEY=c7b29c23b93f65b6b249176790112875
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app:delegated
+    networks:
+      - WhoKnows-LAWNE
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=whoKnows
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - WhoKnows-LAWNE
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d whoKnows"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+
+# Ill get back to this later

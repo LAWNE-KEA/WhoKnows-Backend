@@ -1,0 +1,58 @@
+volumes:
+  postgres_data:
+
+networks:
+  WhoKnows-LAWNE:
+    driver: bridge
+
+services:
+  backend:
+    container_name: backend
+    restart: always
+    build:
+      context: ./src
+      dockerfile: Dockerfile.dev
+    environment:
+        - ENV_DATABASE_USER=${DATABASE_USER}
+        - ENV_DATABASE_PASSWORD=${DATABASE_PASSWORD}
+        - ENV_DATABASE_PORT=5432
+        - ENV_DATABASE_NAME=${DATABASE_NAME}
+        - ENV_DATABASE_MIGRATE=${DATABASE_MIGRATE}
+        - ENV_DATABASE_HOST=db
+        - ENV_DATABASE_SSLMODE=${DATABASE_SSLMODE}
+        - ENV_FILE_PATH=
+        - ENV_JWT_SECRET=${JWT_SECRET}
+        - ENV_JWT_EXPIRY=${JWT_EXPIRY}
+        - ENV_WEATHER_API_KEY=${WEATHER_API_KEY}
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src:/app:delegated
+    networks:
+      - WhoKnows-LAWNE
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - WhoKnows-LAWNE
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d whoKnows"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+
+
+# Ill get back to this later
