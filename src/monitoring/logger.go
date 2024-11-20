@@ -31,6 +31,7 @@ var allowedLogFields = map[string]bool{
 //
 // Returns:
 //   - *logrus.Logger: A pointer to the configured logrus.Logger instance.
+
 func NewLogger(logLevel string, logFormat string) *logrus.Logger {
 	logger := logrus.New()
 

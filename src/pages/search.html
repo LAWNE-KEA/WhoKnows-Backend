@@ -34,6 +34,7 @@
     </div>
 
     <script>
+
       let searchInput;
 
       const BASE_URL = "https://www.lawne.dk/";
@@ -51,7 +52,6 @@
           }
         });
       });
-
 
       function makeSearchRequest() {
         const query = searchInput.value;
@@ -73,7 +73,6 @@
           })
           .catch((error) => console.error("Error:", error));
       }
-
 
       function resetUIToLoggedOutState() {
         document.getElementById("nav-login").innerText = "Log in";
