@@ -46,7 +46,7 @@ jobs:
             git fetch origin main
             git checkout origin/main -- compose.prod.yml
 
-            echo ls -la
+            ls -la
 
             # Set environment variables directly in OS (no need for .env)
             export ENV_DATABASE_USER="${{ secrets.ENV_DATABASE_USER }}"
@@ -65,7 +65,7 @@ jobs:
             echo "Pulling image ghcr.io/lawne-kea/whoknows"
             docker pull ghcr.io/lawne-kea/whoknows
 
-            echo ls -la
+            ls -la
 
             # Start Docker services for production
             echo "Starting Docker services for production..."
