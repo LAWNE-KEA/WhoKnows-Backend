@@ -27,7 +27,7 @@ services:
       - "8080:8080"
     volumes:
       - ./src:/app:delegated
-      - ./src/pages:/app/pages
+      - ./src/pages:/pages
     networks:
       - WhoKnows-LAWNE
     depends_on:
