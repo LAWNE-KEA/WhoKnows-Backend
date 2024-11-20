@@ -46,8 +46,6 @@ jobs:
             git fetch origin main
             git checkout origin/main -- compose.prod.yml
 
-            ls -la
-
             # Set environment variables directly in OS (no need for .env)
             export ENV_DATABASE_USER="${{ secrets.ENV_DATABASE_USER }}"
             export ENV_DATABASE_PASSWORD="${{ secrets.ENV_DATABASE_PASSWORD }}"
@@ -57,15 +55,12 @@ jobs:
             export ENV_JWT_SECRET="${{ secrets.ENV_JWT_SECRET }}"
             export ENV_JWT_EXPIRY="${{ secrets.ENV_JWT_EXPIRY }}"
             export ENV_WEATHER_API_KEY="${{ secrets.ENV_WEATHER_API_KEY }}"
-            export IMAGE_TAG="${{ env.IMAGE_TAG }}"
-            export IMAGE_VERSION="${{ env.IMAGE_TAG }}"
             export ENV_MONITOR_IP="${{ secrets.ENV_MONITOR_IP }}"
 
             # Pull the latest images from GHCR
             echo "Pulling image ghcr.io/lawne-kea/whoknows"
             docker pull ghcr.io/lawne-kea/whoknows
 
-            ls -la
 
             # Start Docker services for production
             echo "Starting Docker services for production..."
