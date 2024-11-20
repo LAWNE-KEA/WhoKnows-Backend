@@ -6,7 +6,7 @@ networks:
     driver: bridge
 
 services:
-   nginx:
+  nginx:
     container_name: nginx
     image: nginx:alpine
     restart: always
@@ -17,28 +17,27 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
-      - whoknows
+      - backend
     networks:
       - WhoKnows-LAWNE
-
 
   backend:
     container_name: whoknows
     image: ghcr.io/lawne-kea/whoknows:latest
     restart: always
     environment:
-        - ENV_DATABASE_USER=${ENV_DATABASE_USER}
-        - ENV_DATABASE_PASSWORD=${ENV_DATABASE_PASSWORD}
-        - ENV_DATABASE_PORT=5432
-        - ENV_DATABASE_NAME=${ENV_DATABASE_NAME}
-        - ENV_DATABASE_MIGRATE=${ENV_DATABASE_MIGRATE}
-        - ENV_DATABASE_HOST=db
-        - ENV_DATABASE_SSLMODE=${ENV_DATABASE_SSLMODE}
-        - ENV_DATABASE_SEED=${ENV_DATABASE_SEED}
-        - ENV_FILE_PATH=
-        - ENV_JWT_SECRET=${ENV_JWT_SECRET}
-        - ENV_JWT_EXPIRY=${ENV_JWT_EXPIRY}
-        - ENV_WEATHER_API_KEY=${ENV_WEATHER_API_KEY}
+      - ENV_DATABASE_USER=${ENV_DATABASE_USER}
+      - ENV_DATABASE_PASSWORD=${ENV_DATABASE_PASSWORD}
+      - ENV_DATABASE_PORT=5432
+      - ENV_DATABASE_NAME=${ENV_DATABASE_NAME}
+      - ENV_DATABASE_MIGRATE=${ENV_DATABASE_MIGRATE}
+      - ENV_DATABASE_HOST=db
+      - ENV_DATABASE_SSLMODE=${ENV_DATABASE_SSLMODE}
+      - ENV_DATABASE_SEED=${ENV_DATABASE_SEED}
+      - ENV_FILE_PATH=
+      - ENV_JWT_SECRET=${ENV_JWT_SECRET}
+      - ENV_JWT_EXPIRY=${ENV_JWT_EXPIRY}
+      - ENV_WEATHER_API_KEY=${ENV_WEATHER_API_KEY}
     ports:
       - "8080:8080"
     volumes:
@@ -65,11 +64,6 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d whoKnows"]
+      test: ["CMD-SHELL", "pg_isready -U ${ENV_DATABASE_USER} -d ${ENV_DATABASE_NAME}"]
       interval: 10s
       timeout: 5s
-      retries: 3
-
-
-
-# Ill get back to this later
