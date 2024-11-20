@@ -1,41 +1,100 @@
-name: Deploy to AWS EC2
-
+name: deploy
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  deploy:
-    name: Deploy to AWS EC2
+  get_version:
     runs-on: ubuntu-latest
-
+    outputs:
+      version: ${{ steps.set_output.outputs.version }}
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Pull latest changes
-      run: |
-        git pull origin main
+  build_and_push:
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set_build_image_tag.outputs.image_tag }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1 # Replace with your desired AWS region
+      - name: Log into GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Import EC2 SSH Key
-      env:
-        EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-      run: |
-        echo "$EC2_SSH_KEY" > ec2_ssh_key.pem
-        chmod 600 ec2_ssh_key.pem
+      - name: Set Repository Name to Lowercase
+        id: set_repo_name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "repo_name=$REPO_NAME" >> $GITHUB_ENV
 
-    - name: Deploy to EC2
-      env:
-        EC2_INSTANCE_ID: i-0c0091cb741e9f87b # Replace with your EC2 instance ID
-        SSH_USER: ubuntu # Replace with your EC2 instance SSH user
-      run: |
-        # Deploy using Docker Compose
-        scp -i ec2_ssh_key.pem -o StrictHostKeyChecking=no compose.yml $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text):/home/$SSH_USER/
-        ssh -i ec2_ssh_key.pem -o StrictHostKeyChecking=no $SSH_USER@$(aws ec2 describe-instances --instance-id $EC2_INSTANCE_ID --query 'Reservations[0].Instances[0].PublicIpAddress' --output text) 'docker-compose down && docker-compose up'
+      - name: Build and Push Image
+        env:
+          repo_name: ${{ env.repo_name }}
+        run: |
+          docker build -t ghcr.io/${{ env.repo_name }}:latest -f ./src/Dockerfile.prod ./src
+          docker push ghcr.io/${{ env.repo_name }}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      IMAGE_TAG: ${{ needs.build_and_push.outputs.image_tag }}
+    steps:
+      - name: Set Repository Name to Lowercase
+        id: set_repo_name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "repo_name=$REPO_NAME" >> $GITHUB_ENV
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to AWS EC2 instance
+        env:
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
+          REPO_NAME: ${{ env.repo_name }}
+        run: |
+          echo "Deploying with IMAGE_TAG: ${{ env.IMAGE_TAG }}"
+
+          # SSH into AWS EC2 instance
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_USER }}@${{ secrets.AWS_IP }} << EOF
+            cd /whoknows || exit
+
+            # log into GitHub Container Registry
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Pull the compose.prod.yml
+            git fetch origin main
+            git checkout origin/main -- compose.prod.yml
+
+            # Set environment variables directly in OS (no need for .env)
+            export ENV_DATABASE_USER="${{ secrets.ENV_DATABASE_USER }}"
+            export ENV_DATABASE_PASSWORD="${{ secrets.ENV_DATABASE_PASSWORD }}"
+            export ENV_DATABASE_NAME="${{ secrets.ENV_DATABASE_NAME }}"
+            export ENV_DATABASE_SSLMODE="${{ secrets.API_DATABASE_SSL_MODE }}"
+            export ENV_DATABASE_MIGRATE="${{ secrets.ENV_DATABASE_MIGRATE }}"
+            export ENV_JWT_SECRET="${{ secrets.ENV_JWT_SECRET }}"
+            export ENV_JWT_EXPIRY="${{ secrets.ENV_JWT_EXPIRY }}"
+            export ENV_WEATHER_API_KEY="${{ secrets.ENV_WEATHER_API_KEY }}"
+            export IMAGE_TAG="${{ env.IMAGE_TAG }}"
+            export IMAGE_VERSION="${{ env.IMAGE_TAG }}"
+            export ENV_MONITOR_IP="${{ secrets.ENV_MONITOR_IP }}"
+
+            # Pull the latest images from GHCR
+            echo "Pulling image ghcr.io/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}"
+            docker pull ghcr.io/${{ env.REPO_NAME }}:${{ env.IMAGE_TAG }}
+
+            # Start Docker services for production
+            echo "Starting Docker services for production..."
+            docker compose -f compose.prod.yml down
+            docker compose -f compose.prod.yml up -d
+          EOF
+
+      - name: Clean up unused images
+        run: |
+          docker image prune -f

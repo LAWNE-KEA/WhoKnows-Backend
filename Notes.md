@@ -59,11 +59,6 @@ Commit conventions, try to keep the format of:
       <td style="padding-bottom: 17px;"><code>MyClass</code>, <code>UserManager</code></td>
     </tr>
     <tr>
-      <td style="padding-bottom: 17px;"><strong>Web Framework Components</strong></td>
-      <td style="padding-bottom: 17px;">Pascal case</td>
-      <td style="padding-bottom: 17px;"><code>HeaderComponent</code>, <code>UserList</code></td>
-    </tr>
-    <tr>
       <td style="padding-bottom: 17px;"><strong>CSS Classes</strong></td>
       <td style="padding-bottom: 17px;">Kebab case</td>
       <td style="padding-bottom: 17px;"><code>.my-class</code>, <code>.user-profile</code></td>
@@ -82,6 +77,73 @@ Commit conventions, try to keep the format of:
 </table>
 
 ---
+# Regarding the rewrite
+  There were a number of considerations that led to the desition to rewrite the app, I will try to outline them here:
+
+  Until now the backend consisted of one large main file containing all code for the project. This had become unreasonable to work with especially as a team of collaborators. This has been resolved by seperating concerns as seen in  the new project structure.
+
+  The new structure is largely based off what the structure we're used to from other languages:
+    whoKnows
+    ├── compose.dev.yml
+    ├── compose.prod.yml
+    ├── LICENSE
+    ├── README.md
+    └── src
+        ├── api
+        │   ├── configs
+        │   │   └── config.go
+        │   ├── handlers
+        │   │   ├── login_handler.go
+        │   │   ├── logout_handler.go
+        │   │   ├── page_handler.go
+        │   │   ├── register_handler.go
+        │   │   └── search_handler.go
+        │   ├── router.go
+        │   └── services
+        │       ├── helper_services.go
+        │       ├── search_service.go
+        │       └── user_service.go
+        ├── database
+        │   ├── database.go
+        │   └── seeds
+        │       └── seed.json
+        ├── Dockerfile.dev
+        ├── Dockerfile.prod
+        ├── go.mod
+        ├── go.sum
+        ├── helperTypes
+        │   ├── response_data.go
+        │   └── weather_response.go
+        ├── main.go
+        ├── models
+        │   ├── page_data.go
+        │   ├── search_log.go
+        │   ├── token.go
+        │   └── user.go
+        ├── pages
+        │   ├── about.html
+        │   ├── login.html
+        │   ├── register.html
+        │   ├── root.html
+        │   ├── search.html
+        │   └── weather.html
+        ├── schema.sql
+        ├── security
+        │   ├── jwt.go
+        │   └── security.go
+        ├── static
+        │   └── style.css
+        └── tmp
+            ├── main
+            └── whoknows.db
+
+
+  During the restructuring the opportunity to refactor and/or rewrite several featutes was taken, as we had become more familiar with golang. During this the desition was made to add Gorm to the project. Gorm made our lives significantly easier and despite the complexity of learning a new framework it ultimately reduced the overall complexity of the backend.
+
+  Another change was the move from MD5 to bcrypt (finally). MD5 hasn't been safe for a while and so it was finally ditched.
+
+  The database was switched to postgresql. We have not worked with postgresql before but seeing as Anders recommended it we decided to give it a shot. It paid off immediately with noticably faster query times, and a better pattern matching from ILIKE etc.
+  
 
 
 ---
