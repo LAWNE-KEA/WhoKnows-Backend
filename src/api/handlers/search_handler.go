@@ -6,7 +6,6 @@ import (
 	"strings"
 	"whoKnows/api/services"
 	"whoKnows/database"
-	"whoKnows/helperTypes"
 	"whoKnows/models"
 
 	"gorm.io/gorm"
@@ -32,12 +31,9 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	body := helperTypes.SearchResponse{
-		Data: make([]map[string]interface{}, len(pages)),
-	}
-	
+	body := make([]map[string]interface{}, len(pages))
 	for i, page := range pages {
-		body.Data[i] = map[string]interface{}{
+		body[i] = map[string]interface{}{
 			"id":       page.ID,
 			"content":  page.Content,
 			"language": page.Language,
