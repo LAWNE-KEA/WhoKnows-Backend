@@ -65,8 +65,8 @@ jobs:
 
             # Start Docker services for production
             echo "Starting Docker services for production..."
-            docker compose -f compose.prod.yml down
-            docker compose -f compose.prod.yml up -d
+            docker-compose -f compose.prod.yml down
+            docker-compose -f compose.prod.yml up -d
           EOF
 
       - name: Clean up unused images
