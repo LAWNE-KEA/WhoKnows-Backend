@@ -54,25 +54,17 @@
       });
 
       function makeSearchRequest() {
-        const query = searchInput.value;
-        const url = new URL(`${BASE_URL}api/search`);
-        url.searchParams.set("q", query);
-
-        fetch(url)
-          .then((response) => response.json())
-          .then((response) => {
-            const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = "";
-            response.search_results.forEach((result) => {
-              const resultDiv = document.createElement("div");
-              resultDiv.innerHTML = `
-              <h2><a class="search-result-title" href="${result.url}">${result.title}</a></h2>
-            `;
-              resultsDiv.appendChild(resultDiv);
-            });
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+    const query = document.getElementById('search-input').value;
+    fetch(`/api/search?q=${query}`)
+      .then(response => response.json())
+      .then(data => {
+        // Handle the search results
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
 
       function resetUIToLoggedOutState() {
         document.getElementById("nav-login").innerText = "Log in";
