@@ -1,5 +1,7 @@
 volumes:
   postgres_data:
+  certbot-etc:
+  certbot-var:
 
 networks:
   WhoKnows-LAWNE:
@@ -18,6 +20,17 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - backend
+    networks:
+      - WhoKnows-LAWNE
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     networks:
       - WhoKnows-LAWNE
 
