@@ -11,17 +11,19 @@ services:
     image: ghcr.io/lawne-kea/whoknows:latest
     restart: always
     environment:
-        - ENV_DATABASE_USER=${ENV_DATABASE_USER}
-        - ENV_DATABASE_PASSWORD=${ENV_DATABASE_PASSWORD}
-        - ENV_DATABASE_PORT=5432
-        - ENV_DATABASE_NAME=${ENV_DATABASE_NAME}
-        - ENV_DATABASE_MIGRATE=${ENV_DATABASE_MIGRATE}
-        - ENV_DATABASE_HOST=db
-        - ENV_DATABASE_SSLMODE=${ENV_DATABASE_SSLMODE}
-        - ENV_FILE_PATH=
-        - ENV_JWT_SECRET=${ENV_JWT_SECRET}
-        - ENV_JWT_EXPIRY=${ENV_JWT_EXPIRY}
-        - ENV_WEATHER_API_KEY=${ENV_WEATHER_API_KEY}
+      - ENV_DATABASE_USER=user
+      - ENV_DATABASE_PASSWORD=password
+      - ENV_DATABASE_PORT=5432
+      - ENV_DATABASE_NAME=whoKnows
+      - ENV_DATABASE_MIGRATE=true
+      - ENV_DATABASE_HOST=db
+      - ENV_DATABASE_SSLMODE=disable
+      - ENV_DATABASE_SEED=true
+      - ENV_DATABASE_SEED_FILE=/app/database/seeds/seed.json
+      - ENV_FILE_PATH=
+      - ENV_JWT_SECRET=6234075679ba4f52af635d54d1e03a8c2a0e14f76ec88716e7ef1264da29e6eb
+      - ENV_JWT_EXPIRY=3600
+      - ENV_WEATHER_API_KEY=c7b29c23b93f65b6b249176790112875
     ports:
       - "8080:8080"
     volumes:
@@ -54,3 +56,15 @@ services:
 
 
 # Ill get back to this later
+
+        # - ENV_DATABASE_USER=${ENV_DATABASE_USER}
+        # - ENV_DATABASE_PASSWORD=${ENV_DATABASE_PASSWORD}
+        # - ENV_DATABASE_PORT=5432
+        # - ENV_DATABASE_NAME=${ENV_DATABASE_NAME}
+        # - ENV_DATABASE_MIGRATE=${ENV_DATABASE_MIGRATE}
+        # - ENV_DATABASE_HOST=db
+        # - ENV_DATABASE_SSLMODE=${ENV_DATABASE_SSLMODE}
+        # - ENV_FILE_PATH=
+        # - ENV_JWT_SECRET=${ENV_JWT_SECRET}
+        # - ENV_JWT_EXPIRY=${ENV_JWT_EXPIRY}
+        # - ENV_WEATHER_API_KEY=${ENV_WEATHER_API_KEY}
