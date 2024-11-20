@@ -34,6 +34,7 @@ services:
     depends_on:
       - db
       - prometheus
+      - grafana
 
   prometheus:
     image: prom/prometheus:latest
@@ -41,6 +42,15 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - WhoKnows-LAWNE
+
+  grafana:
+    image: grafana/grafana:10.2.4
+    ports:
+      - "3000:3000"
+    networks:
+      - WhoKnows-LAWNE
 
   db:
     container_name: db
