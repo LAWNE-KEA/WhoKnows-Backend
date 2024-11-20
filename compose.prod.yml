@@ -8,7 +8,7 @@ networks:
 services:
   backend:
     container_name: whoknows
-    image: ghcr.io/lawne/whoknows:latest
+    image: ghcr.io/lawne-kea/whoknows:latest
     restart: always
     environment:
         - ENV_DATABASE_USER=${ENV_DATABASE_USER}

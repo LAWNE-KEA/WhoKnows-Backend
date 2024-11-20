@@ -55,6 +55,7 @@ jobs:
             echo "ENV_DATABASE_NAME=${{ secrets.ENV_DATABASE_NAME }}"
             export ENV_DATABASE_NAME="${{ secrets.ENV_DATABASE_NAME }}"
             export ENV_DATABASE_SSLMODE="${{ secrets.API_DATABASE_SSL_MODE }}"
+            export ENV_DATABASE_SEED="${{ secrets.ENV_DATABASE_SEED }}"
             export ENV_DATABASE_MIGRATE="${{ secrets.ENV_DATABASE_MIGRATE }}"
             export ENV_JWT_SECRET="${{ secrets.ENV_JWT_SECRET }}"
             export ENV_JWT_EXPIRY="${{ secrets.ENV_JWT_EXPIRY }}"
