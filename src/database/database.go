@@ -107,7 +107,7 @@ func seedData() {
 		} else {
 			err = Connection.Create(&pageData).Error
 			if err != nil {
-				fmt.Println("error seeding data:", err)
+				//fmt.Println("error seeding data:", err)
 			}
 		}
 	}

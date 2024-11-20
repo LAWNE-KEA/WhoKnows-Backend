@@ -85,6 +85,7 @@ type Config struct {
 		Migrate  bool
 		Seed     bool
 		SeedFile string
+		Log 		LogConfig
 	}
 	JWT struct {
 		Secret string
@@ -93,4 +94,18 @@ type Config struct {
 	Weather struct {
 		APIKey string
 	}
+	Log struct {
+
+		Level  string
+
+		Format string
+
+}
+}
+
+var AppConfig Config
+
+type LogConfig struct {
+	Level  string
+	Format string
 }
