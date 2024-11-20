@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Log into GitHub Container Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Set Repository Name to Lowercase
         id: set_repo_name
@@ -66,7 +66,7 @@ jobs:
             cd /whoknows || exit
 
             # log into GitHub Container Registry
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             # Pull the compose.prod.yml
             git fetch origin main
@@ -98,3 +98,16 @@ jobs:
       - name: Clean up unused images
         run: |
           docker image prune -f
+
+
+
+# Secrets
+
+
+
+
+
+
+
+
+

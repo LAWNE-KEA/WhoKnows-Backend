@@ -183,6 +183,10 @@ Consider whether you want to ensure linting before anyone can push their code or
 
   - Because Go implicit have linting capabilities build into it, we consider it as something that we have already been given by Go.
 
+
+# New sonarqube:
+  We have since readded sonarqube and it identified a few issues with the html and logout_handler which we have resolved. They were minor issues and easy to fix.
+
 # GitHub Badge for GitHub Actions
 
 ![<TEXT ON SHIELD>](https://github.com/<LAWNE-KEA>/<WhoKnows-Backend>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)
