@@ -10,9 +10,6 @@ services:
     container_name: whoknows
     image: ghcr.io/lawne/whoknows:latest
     restart: always
-    build:
-      context: ./src
-      dockerfile: Dockerfile.dev
     environment:
         - ENV_DATABASE_USER=${ENV_DATABASE_USER}
         - ENV_DATABASE_PASSWORD=${ENV_DATABASE_PASSWORD}
