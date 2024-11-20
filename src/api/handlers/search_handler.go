@@ -47,11 +47,11 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"status":  "success",
-		"message": "Search results",
-		"data":    body,
-		"results": len(pages),
-		"hits":    searchLog.Count + 1,
+		"status":         "success",
+		"message":        "Search results",
+		"search_results": body,
+		"results":        len(pages),
+		"hits":           searchLog.Count + 1,
 	}
 
 	services.ResponseSuccess(w, response, http.StatusOK)
