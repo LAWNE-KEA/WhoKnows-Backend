@@ -17,13 +17,15 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	strings.HasPrefix(auth, "Bearer ")
-	if !strings.HasPrefix(auth, "Bearer ") {
+	var tokenStart = "Bearer "
+
+	validPrefix := strings.HasPrefix(auth, tokenStart)
+	if !validPrefix {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
 
-	token := strings.Split(auth, "Bearer ")[1]
+	token := strings.Split(auth, tokenStart)[1]
 
 	err := security.ExpireJWT(database.Connection, token)
 	if err != nil {
