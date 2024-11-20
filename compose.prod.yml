@@ -28,6 +28,7 @@ services:
     volumes:
       - ./src:/app:delegated
       - ./src/pages:/pages
+      - ./src/static:/static
     networks:
       - WhoKnows-LAWNE
     depends_on:
