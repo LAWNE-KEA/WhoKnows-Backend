@@ -67,8 +67,7 @@ func populateEnvConfig() {
 	EnvConfig.Database.Port, _ = GetEnvInt("ENV_DATABASE_PORT")
 	EnvConfig.Database.SSLMode, _ = GetEnv("ENV_DATABASE_SSL_MODE")
 	EnvConfig.Database.Migrate, _ = GetEnvBool("ENV_DATABASE_MIGRATE")
-	EnvConfig.Database.Seed, _ = GetEnvBool("ENV_DATABASE_SEED")
-	EnvConfig.Database.SeedFile, _ = GetEnv("ENV_DATABASE_SEED_FILE")
+	EnvConfig.Database.SeedFile, _ = GetEnv("ENV_DATABASE_SEED")
 	EnvConfig.JWT.Secret, _ = GetEnv("ENV_JWT_SECRET")
 	EnvConfig.JWT.Expiry, _ = GetEnvInt("ENV_JWT_EXPIRY")
 	EnvConfig.Weather.APIKey, _ = GetEnv("ENV_WEATHER_API_KEY")
@@ -83,9 +82,8 @@ type Config struct {
 		Port     int
 		SSLMode  string
 		Migrate  bool
-		Seed     bool
 		SeedFile string
-		Log 		LogConfig
+		Log      LogConfig
 	}
 	JWT struct {
 		Secret string
@@ -95,12 +93,10 @@ type Config struct {
 		APIKey string
 	}
 	Log struct {
-
-		Level  string
+		Level string
 
 		Format string
-
-}
+	}
 }
 
 var AppConfig Config

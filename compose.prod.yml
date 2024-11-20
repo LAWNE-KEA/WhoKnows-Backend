@@ -8,7 +8,7 @@ networks:
 services:
   backend:
     container_name: whoknows
-    image: ghcr.io/lawne/whoknows:${{ env.IMAGE_TAG }}
+    image: ghcr.io/lawne/whoknows:latest
     restart: always
     build:
       context: ./src
@@ -21,6 +21,7 @@ services:
         - ENV_DATABASE_MIGRATE=${ENV_DATABASE_MIGRATE}
         - ENV_DATABASE_HOST=db
         - ENV_DATABASE_SSLMODE=${ENV_DATABASE_SSLMODE}
+        - ENV_DATABASE_SEED=${ENV_DATABASE_SEED}
         - ENV_FILE_PATH=
         - ENV_JWT_SECRET=${ENV_JWT_SECRET}
         - ENV_JWT_EXPIRY=${ENV_JWT_EXPIRY}

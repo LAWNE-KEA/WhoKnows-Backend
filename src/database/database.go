@@ -37,7 +37,7 @@ func InitDatabase() error {
 
 	fmt.Println("Database connected")
 
-	if configs.EnvConfig.Database.Seed {
+	if configs.EnvConfig.Database.SeedFile != "" {
 		seedData()
 	}
 
