@@ -345,6 +345,8 @@
 
     6. Evt. spørgsmål som vi stillede os selv?
 
+        "Ikke noget specifikt til denne dag."
+
 13. Torsdag den 7. november 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
