@@ -322,13 +322,23 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Ikke noget specifikt til denne dag".
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Vi besluttede os for at for lige at få styr på hvor vi var rent projektmæssigt, så var det en god idé lige at sætte sig ned sammen over Discord og få snakket sammen."
 
     3. Var der noget der gik godt?
 
+        "Ikke noget specifikt til denne dag".
+
     4. Var der noget der gik galt?
 
+        "Ikke noget specifikt til denne dag".
+
     5. Var der nogle ting som vi fandt læringsrige?
+
+        "Ikke noget specifikt til denne dag".
 
     6. Evt. spørgsmål som vi stillede os selv?
 
@@ -347,6 +357,8 @@ Ugentlig dagbog studiegruppe LAWNE
         "Vi havde problemer med få vores search functionalitet til at virke, da den blev ved med at give en fejl på 'makeSearchRequest' og en bad request fejl. Det lykkedes os til sidst at få styr på at se søgninger på vores hjemmeside." Der blev søgt på 'Diddy' og noget andet, men vi var usikre på om det nogle gange var os som fik loggen til at udskrive besked. Vi stoppede kl. 18.00."
 
         "Vi fik en stor sejr da vi så at når vi søgte på 'list' kunne vi se 'list of programming languages'-wikipedia siden. Det var mega fedt!."
+
+        "Generelt havde vi kommet et godt stykke videre siden sidst følte vi."
 
     4. Var der noget der gik galt?
 
