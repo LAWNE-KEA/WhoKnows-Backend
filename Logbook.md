@@ -428,6 +428,7 @@ Ugentlig dagbog studiegruppe LAWNE
 
         "Om hvordan vi skulle løse problemet med manglede plads på serveren."
 
+        "Vi aftalte at kigge på noget igen søndag den 24. november 2024."
 
 17. Torsdag den 21. november 2024
 
