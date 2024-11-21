@@ -272,15 +272,27 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+       "Vi har desværre mistet to gruppemedlemmer som tager pause fra studiet. Det er rigtig ærgerligt og vi ønsker dem god bedring - men det stopper os ikke i at komme i mål!"
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Vi tænkte på om hvordan vi skulle arbejde på vores projekt nu da vi havde mistet to mand."
 
     3. Var der noget der gik godt?
 
+        "Ikke noget specifikt."
+
     4. Var der noget der gik galt?
+
+        "Ikke noget specifikt."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+        "Ikke noget specifikt til denne dag."
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "Ikke noget specifikt til denne dag."
 
 12. Torsdag den 31. oktober 2024
 
