@@ -67,23 +67,31 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Ikke som sådan problemer, men vi tænkte over hvordan vi skulle arbejde med vores repositories."
+
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        Siden vi besluttede os fra dag 1 at gå med to repositories, bruger vi ikke multi-repo setup.
+        "Siden vi besluttede os fra dag 1 at gå med to repositories, bruger vi ikke multi-repo setup."
 
     3. Var der noget der gik godt?
 
-        Vi var i godt gåpå mod og ser frem til at mødes på lørdag!
+        "Vi var i godt gåpå mod og ser frem til at mødes på lørdag!"
 
     4. Var der noget der gik galt?
 
+        "Ikke noget specifikt."
+
     5. Var der nogle ting, som vi fandt læringsrige?
+
+        "Ikke noget specifikt til denne dag".
 
     6. Evt. spørgsmål som vi stillede os selv?
 
+        "Vi tænkte over hvilke fordele og ulemper der var ved hhv. single page repo frem for multi-repo setup."
+
     7. Overvejelser til næste gang:
 
-        Lørdag den 7. september mødes vi virtuelt for at prøve på at omskrive koden.
+        "Lørdag den 7. september mødes vi virtuelt for at prøve på at omskrive koden."
 
 4. Lørdag den 7. september 2024
 
