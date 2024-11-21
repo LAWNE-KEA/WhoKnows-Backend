@@ -171,35 +171,53 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Vi tænkte over hvordan vi skulle løse deployment problemet".
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Om hvordan vi skulle løse vores deploy".
 
     3. Var der noget der gik godt?
 
+        "Vi rodede lidt med workflows og github actions".
+
     4. Var der noget der gik galt?
+
+        "I dag skulle skulle vi helst få vores applikation deployet, men det lykkedes desværre ikke".
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+        "Intet på daværende tidspunkt".
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "Intet på daværende tidspunkt".
 
 8. Torsdag den 3. oktober 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Om vi ville komme i mål".
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Om vi ville overholde deadline med simulationen".
 
     3. Var der noget der gik godt?
 
+        "At  vi indstå helt præcist hvad vores problem var, så vi derved kunne løse det. Vi fik én uge til at få vores applkation oppe at køre før simulationen".
+
     4. Var der noget der gik galt?
 
-        "We got told that our API specification had to be remade in terms of our get requests. All the GET requests which we have deleted has to be used because otherwise the simulation will not work". That means that we have to create the same HTML structure as the legacy project. Therefor a multipage application instead of a single page application."
+        "Vi blev fortalt at vores API specifikation SKULLE reskrives ift. vores GET requests. Alle de GET requests som vi havde slettet skal bruges fordi ellers virkede vores simulation ikke. Det betød at vi skulle lave den samme HTML stuktur som legacy projektet. Derfor skulle vi have en multipage applikation i stedet for en single page."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "We saw that we really had to put a lot of effort to get us the finish line, and to make this work! A lot of surprises can occur all of a sudden".
+        "Vi indså at vi virkelig blev nødt til at putte en del kræfter i at få det til at lykkedes og komme i mål! Mange overraskelser kan bare komme ud i det blå".
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        "We thought about how we would manage this, as it really was a big setback for us, but we managed it".
+        "Vi tænkte om hvordan vi ville løse dette her, da det var et ret stort setback for us, men vi gjorde det".
 
 9. Torsdag den 10. oktober 2024
 
