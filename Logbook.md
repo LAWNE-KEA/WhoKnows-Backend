@@ -515,7 +515,6 @@
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-
 20. Torsdag den 5. december 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
@@ -543,3 +542,9 @@
     5. Var der nogle ting som vi fandt læringsrige?
 
     6. Evt. spørgsmål som vi stillede os selv?
+
+// skal evt. finde ud af at svare på følgende fremover:
+
+    1. What made us DevOps?
+    2. In what ways were you not DevOps?
+
