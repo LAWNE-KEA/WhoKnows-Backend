@@ -252,6 +252,34 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Vi reflekterede over om vi havde valgt en for lille server til at starte med, så det fik os til at tænke over om hvordan vi ville løse det problem da vi tilsyneladende manglede plads. Vi havde prøvet at rydde op i volumes og køre git prune, men det løste ikke vores problem."
+
+    2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Vi overvejede om vi på et senere tidspunkt skulle finde ud af at få skaffet os mere plads. Vi synes det ville være meget timeconsuming, hvis vi skulle få en ny server oppe at køre med mere plads."
+
+    3. Var der noget der gik godt?
+
+        "Vi havde problemer med få vores search functionalitet til at virke, da den blev ved med at give en fejl på 'makeSearchRequest' og en bad request fejl. Det lykkedes os til sidst at få styr på at se søgninger på vores hjemmeside." Der blev søgt på 'Diddy' og noget andet, men vi var usikre på om det nogle gange var os som fik loggen til at udskrive besked. Vi stoppede kl. 18.00."
+
+        "Vi fik en stor sejr da vi så at når vi søgte på 'list' kunne vi se 'list of programming languages'-wikipedia siden. Det var mega fedt!."
+
+    4. Var der noget der gik galt?
+
+        "Vi brugte en del tid på vores nginx.config fil da vi havde udfordringer med at få styr på nginx. Vi deployede og byggede en hel del, og vi kom tættere og tættere at få det til at virke, men vi synes det var en anelse kryptisk at læse og forstå alle beskederne i actions på GitHub."
+
+    5. Var der nogle ting som vi fandt læringsrige?
+
+        "At arbejde med nginx.config-filen".
+
+    6. Evt. spørgsmål som vi stillede os selv?
+
+        "Om hvordan vi skulle løse problemet med manglede plads på serveren."
+
+14. Søndag den 17. november 2024
+
+    1. Havde vi nogle problemer, som var værd at reflektere over?
+
     2. Havde vi gjort os nogle overvejelser om noget?
 
     3. Var der noget der gik godt?
@@ -262,7 +290,36 @@ Ugentlig dagbog studiegruppe LAWNE
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-14. Torsdag den 21. november 2024
+15. Tirsdag den 19. november 2024
+
+    1. Havde vi nogle problemer, som var værd at reflektere over?
+
+        "Vi reflekterede over om vi havde valgt en for lille server til at starte med, så det fik os til at tænke over om hvordan vi ville løse det problem da vi tilsyneladende manglede plads. Vi havde prøvet at rydde op i volumes og køre git prune, men det løste ikke vores problem."
+
+    2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Vi overvejede om vi på et senere tidspunkt skulle finde ud af at få skaffet os mere plads. Vi synes det ville være meget timeconsuming, hvis vi skulle få en ny server oppe at køre med mere plads."
+
+    3. Var der noget der gik godt?
+
+        "Vi havde problemer med få vores search functionalitet til at virke, da den blev ved med at give en fejl på 'makeSearchRequest' og en bad request fejl. Det lykkedes os til sidst at få styr på at se søgninger på vores hjemmeside." Der blev søgt på 'Diddy' og noget andet, men vi var usikre på om det nogle gange var os som fik loggen til at udskrive besked. Vi stoppede kl. 18.00."
+
+        "Vi fik en stor sejr da vi så at når vi søgte på 'list' kunne vi se 'list of programming languages'-wikipedia siden. Det var mega fedt!."
+
+    4. Var der noget der gik galt?
+
+        "Vi brugte en del tid på vores nginx.config fil da vi havde udfordringer med at få styr på nginx. Vi deployede og byggede en hel del, og vi kom tættere og tættere at få det til at virke, men vi synes det var en anelse kryptisk at læse og forstå alle beskederne i actions på GitHub."
+
+    5. Var der nogle ting som vi fandt læringsrige?
+
+        "At arbejde med nginx.config-filen".
+
+    6. Evt. spørgsmål som vi stillede os selv?
+
+        "Om hvordan vi skulle løse problemet med manglede plads på serveren."
+
+
+16. Torsdag den 21. november 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
@@ -288,7 +345,7 @@ Ugentlig dagbog studiegruppe LAWNE
 
         "At til når vi når dertil hvor vi virkelig mangler plads på serveren, at vi skal til at tænkte over at få lavede nogle flere servere".
 
-15. Torsdag den 28. november 2024
+17. Torsdag den 28. november 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
@@ -303,7 +360,7 @@ Ugentlig dagbog studiegruppe LAWNE
     6. Evt. spørgsmål som vi stillede os selv?
 
 
-16. Torsdag den 5. december 2024
+18. Torsdag den 5. december 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
@@ -317,7 +374,7 @@ Ugentlig dagbog studiegruppe LAWNE
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-17. Torsdag den 12. december 2024
+19. Torsdag den 12. december 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
