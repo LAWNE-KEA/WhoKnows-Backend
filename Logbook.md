@@ -153,9 +153,9 @@ Ugentlig dagbog studiegruppe LAWNE
 
     3. Var der noget der gik godt?
 
-        "We deployed our application to Vercel, but were soon to realize that it was not allowed".
+        "Vi deployede vores applikation til Vercel, men vi ville snart indse at det ikke var tilladt".
 
-        "We made a deployment for our backend to AWS which seemed to work fine."
+        "Vi deployede vores backend til AWS som virkede fint".
 
     4. Var der noget der gik galt?
 
