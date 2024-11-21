@@ -271,7 +271,7 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        "Vi klarede det meste af HTML/backend route opgaverne. Vi mangler umiddelbart kun /search, men det er ikke en opgave som burde være så stor for os. Det er mere eller mindre den side som vi har arbejdet på hele vejen igennem projektet.
+        "Vi klarede det meste af HTML/backend route opgaverne. Vi mangler umiddelbart kun /search, men det er ikke en opgave som burde være så stor for os. Det er mere eller mindre den side som vi har arbejdet på hele vejen igennem projektet."
 
         "Vi sad og prøvede at få deployede noget på en VM men vi kom ikke længere end at lave docker compose på den. Det endte med at VM'en crashede."
 
@@ -287,15 +287,13 @@
 
         "Ikke noget specifikt".
 
-
     5. Var der nogle ting som vi fandt læringsrige?
 
         "Vi skal få set at få merget alle branches vi har lavet, ind til main branch. Det kan godt blive lidt af en hovedpine, men det er et nødvendigt onde. Derefter skal vi kigge på deployment".
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        "Ikke noget specifikt".
-
+        "Ikke noget specifikt."
 
 11. Torsdag den 24. oktober 2024
 
