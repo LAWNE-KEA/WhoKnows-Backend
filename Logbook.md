@@ -4,25 +4,28 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Ikke noget specifikt".
+
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        Hvorfor har vi valgt at bruge Go?
-
-        Hvorfor har vi valgt client side rendering?
-
-	        "Det er mindre server belastende"
+        1. "Hvorfor vi har valgt at bruge Go.
+        2. Hvorfor vi har valgt client side rendering i stedet for server side. Vi kom frem til at det er mindre belastende."
 
     3. Var der noget der gik godt?
 
-        Det var spændende at få indsigt i hvor kompleks og stort DevOps er.
+        "Det var spændende at få indsigt i hvor kompleks og stort DevOps er."
 
     4. Var der noget der gik galt?
 
+        "Ikke noget specifikt".
+
     5. Var der nogle ting som vi fandt læringsrige?
 
-        Studiet af software arkeologi. At man dykker ned i koden og finder ud af, hvordan man kan reverse engineer source koden er rigtig spændende.
+        "Studiet af software arkeologi. At man dykker ned i koden og finder ud af, hvordan man kan reverse engineer source koden er rigtig spændende."
 
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "Ikke noget specifikt".
 
 2. Lørdag den 31. august 2024
 
