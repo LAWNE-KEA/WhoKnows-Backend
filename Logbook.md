@@ -249,11 +249,11 @@
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        "Om vi ville overholde deadline med simulationen".
+        "Om vi ville overholde deadline med simulationen."
 
     3. Var der noget der gik godt?
 
-        "At  vi indstå helt præcist hvad vores problem var, så vi derved kunne løse det. Vi fik én uge til at få vores applkation oppe at køre før simulationen".
+        "At  vi indstå helt præcist hvad vores problem var, så vi derved kunne løse det. Vi fik én uge til at få vores applkation oppe at køre før simulationen."
 
     4. Var der noget der gik galt?
 
@@ -261,11 +261,11 @@
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "Vi indså at vi virkelig blev nødt til at putte en del kræfter i at få det til at lykkedes og komme i mål! Mange overraskelser kan bare komme ud i det blå".
+        "Vi indså at vi virkelig blev nødt til at putte en del kræfter i at få det til at lykkedes og komme i mål! Mange overraskelser kan bare komme ud i det blå."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        "Vi tænkte om hvordan vi ville løse dette her, da det var et ret stort setback for us, men vi gjorde det".
+        "Vi tænkte om hvordan vi ville løse dette her, da det var et ret stort setback for us, men vi gjorde det."
 
 10. Torsdag den 10. oktober 2024
 
