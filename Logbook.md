@@ -407,29 +407,29 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        "Nothing in particular".
+        "Nothing in particular."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        "Nothing in particular".
+        "Nothing in particular."
 
     3. Var der noget der gik godt?
 
-        "We created a docker workflow to test ec2. We made minor changed to the Dockerfile, while also changing a few things in our CSS file. We also made some changes to our tmpl function. We finished a lot of work o nthe handlers and services. Added ENV handling. The backend is now working with docker compose and postgres. we added Air to our project, which is a program that keeps our code being updated as to when we make our changes in our code, you can see that the update to the code is happening live in the terminal".
+        "We created a docker workflow to test ec2. We made minor changed to the Dockerfile, while also changing a few things in our CSS file. We also made some changes to our tmpl function. We finished a lot of work o nthe handlers and services. Added ENV handling. The backend is now working with docker compose and postgres. we added Air to our project, which is a program that keeps our code being updated as to when we make our changes in our code, you can see that the update to the code is happening live in the terminal."
 
-        "We took our backend and made several folders to make it a lot more organized." It really helped us to have a better work environment, cleared up a lot of mess in our code, and made it a lot easier for us to understand what is going on and where"
+        "We took our backend and made several folders to make it a lot more organized." It really helped us to have a better work environment, cleared up a lot of mess in our code, and made it a lot easier for us to understand what is going on and where."
 
     4. Var der noget der gik galt?
 
-        "There was nothing per say that went wrong, but we begang to clean up our code".
+        "There was nothing per say that went wrong, but we begang to clean up our code."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "Nothing in particular".
+        "Nothing in particular."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        "Nothing in particular".
+        "Nothing in particular."
 
 16. Tirsdag den 19. november 2024
 
