@@ -139,41 +139,43 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
     3. Var der noget der gik godt?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
     4. Var der noget der gik galt?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        "Ikke nogle specifik til denne dag."
+        "Ikke noget specifikt til denne dag."
 
 6. Torsdag den 19. september 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        "Det var kun Nikolaj som var her, da William skulle til lægen"
+        "Det var kun Nikolaj som var her, da William skulle til lægen."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
+        "Ikke noget specifikt til denne dag."
+
     3. Var der noget der gik godt?
 
-        "Vi deployede vores applikation til Vercel, men vi ville snart indse at det ikke var tilladt".
+        "Vi deployede vores applikation til Vercel, men vi ville snart indse at det ikke var tilladt."
 
-        "Vi deployede vores backend til AWS som virkede fint".
+        "Vi deployede vores backend til AWS som virkede fint."
 
     4. Var der noget der gik galt?
 
@@ -184,6 +186,8 @@
         "Det var læringsrigt at man kunne køre npx linting i sin kode, så når man nu er i et automatiseret miljø, bliver man stoppet når man prøver at committe sin kode."
 
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "Ikke noget specifikt til denne dag."
 
 7. Torsdag den 26. september 2024
 
