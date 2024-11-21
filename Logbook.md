@@ -97,45 +97,43 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        Vi havde som sådan ikke nogle problemer, men vi gjorde os nogle tanker om hvorfor at, det med at search var en POST metode i APIet, hvor vi tænkte at det var en mærkelig måde at gøre tingene på.
+        "Vi havde som sådan ikke nogle problemer, men vi gjorde os nogle tanker om hvorfor at, det med at search var en POST metode i APIet, hvor vi tænkte at det var en mærkelig måde at gøre tingene på."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        Vi påtænker at gå single page repository, da vi tænker det kunne være bedst
+        "Vi påtænker at gå single page repository, da vi tænker det kunne være bedst, og det har vi heller ikke prøvet før. Det var en god chance for os at lære noget nyt."
         
-        Vi påtænker at have en rewrite strategi, hvor vi tager små skridt først, og vi tænker over at vi skal commite og pushe lidt efter lidt, når vi har noget som fungerer. På den måde får vi produceret værdi hurtigt til kunden. Vi snakkede også om hvordan vi ville lave vores mappestruktur
-        
+        "Vi påtænker at have en rewrite strategi, hvor vi tager små skridt først, og vi tænker over at vi skal commite og pushe lidt efter lidt, når vi har noget som fungerer. På den måde får vi produceret værdi hurtigt til kunden. Vi snakkede også om hvordan vi ville lave vores mappestruktur."
 
     3. Var der noget der gik godt?
 
-        -
+        "Vi fik snakket om væsentlige ting såsom makkestruktur til projektet. Vi så at search tilfældigvis var en POST metode i API'et. Vi tænkte at det var en mærkelig måde at gøre det på. Måske var det en lille udfordring fra Anders' side af?"
 
     4. Var der noget der gik galt?
 
-        -
+        "Ikke noget specifikt til denne dag".
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-    Vi kan tænke over om det vi får leveret (i dette tilfælde fra Anders), har fejl i sig, og gøre op med os selv om vi skal acceptere det vi får eller lave det på den ”korrekte” måde.
+        "Vi kan tænke over om det vi får leveret (i dette tilfælde fra Anders), har fejl i sig, og gøre op med os selv om vi skal acceptere det vi får eller lave det på den ”korrekte” måde."
     
-    Vi læste at der i opgavebeskrivelsen stod at vi skulle holde os til den API specifikation, som vi blev bedt om at bruge.
+        "Vi læste at der i opgavebeskrivelsen stod at vi skulle holde os til den API specifikation, som vi blev bedt om at bruge."
     
-    Vi besluttede os for at gøre som vi blev bedt om. Vi tænkte så at der ville komme et tidspunkt længere henne i forløbet hvor vi så skulle gøre det på den korrekte måde med GET.
+        "Vi besluttede os for at gøre som vi blev bedt om. Vi tænkte så at der ville komme et tidspunkt længere henne i forløbet hvor vi så skulle gøre det på den korrekte måde med GET."
 
-    Go.mod er lidt ligesom ens node modules tænkte vi.
+        "Go.mod er lidt ligesom ens node modules tænkte vi."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-    -
+        "Ikke noget specifikt".
 
     7. Hvad gjorde os DevOps?
 
-    -
+        "Ikke nogle specifikke noget til dette."
 
     8. Hvad gjorde os ikke DevOps?
 
-    -
-
+        "Ikke nogle specifikke noget til dette."
 
 5. Torsdag den 12. september 2024
 
