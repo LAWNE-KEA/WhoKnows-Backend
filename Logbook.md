@@ -445,7 +445,7 @@
 
         "Vi havde problemer med få vores search functionalitet til at virke, da den blev ved med at give en fejl på 'makeSearchRequest' og en bad request fejl. Det lykkedes os til sidst at få styr på at se søgninger på vores hjemmeside." Der blev søgt på 'Diddy' og noget andet, men vi var usikre på om det nogle gange var os som fik loggen til at udskrive besked. Vi stoppede kl. 18.00."
 
-        "Vi fik en stor sejr da vi så at når vi søgte på 'list' kunne vi se 'list of programming languages'-wikipedia siden. Det var mega fedt!."
+        "Vi fik en stor sejr da vi så at når vi søgte på 'list' kunne vi se 'list of programming languages'-wikipedia siden. Det var mega fedt!"
 
     4. Var der noget der gik galt?
 
@@ -453,7 +453,7 @@
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "At arbejde med nginx.config-filen".
+        "At arbejde med nginx.config-filen."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
