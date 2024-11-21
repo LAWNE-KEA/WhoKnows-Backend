@@ -1,6 +1,5 @@
 Ugentlig dagbog studiegruppe LAWNE
 
-
 1. Torsdag den 29. august 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
@@ -11,7 +10,7 @@ Ugentlig dagbog studiegruppe LAWNE
 
         Hvorfor har vi valgt client side rendering?
 
-	        Det er mindre server belastende
+	        "Det er mindre server belastende"
 
     3. Var der noget der gik godt?
 
@@ -267,15 +266,27 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Da vi var i gang med at skrive terraform kommandoer, undrede Nikolaj sig over hvorfor han tilsyneladende ikke altid kunne køre terraform apply, da den blev ved med at give fejlmeddelelser ift. at han nået en grænse for at oprette virtuelle maskiner på Azure."
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Ikke specifikt, men man tænkte da over om hvordan terraform kunne integreres i ens projekt".
 
     3. Var der noget der gik godt?
 
+        "Vi fik indblik i hvor stort og omfattende redskab at terraform er, og hvad det kan. Det er ikke ment til alle projekter, men det har helt klart sine fordele."
+
     4. Var der noget der gik galt?
+
+        "Der var ikke noget som gik galt".
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-    6. Evt. spørgsmål som vi stillede os selv?
+        "Hvor nemt og hurtigt det egentlig gik at oprette virtuelle maskiner med Terraform. Selvom man måske tænkte at det alligevel tog 1 minut, så er det stadigvæk hurtigt ift. for år siden".
+
+    6. Evt. spørgsmål, som vi stillede os selv?
+
+        "At til når vi når dertil hvor vi virkelig mangler plads på serveren, at vi skal til at tænkte over at få lavede nogle flere servere".
 
 15. Torsdag den 28. november 2024
 
