@@ -227,12 +227,19 @@
 
     3. Var der noget der gik godt?
 
+        "Ikke noget specifikt til denne dag."
+
     4. Var der noget der gik galt?
+
+        "Ikke noget specifikt til denne dag."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+        "Ikke noget specifikt til denne dag."
+
     6. Evt. spørgsmål som vi stillede os selv?
 
+        "Ikke noget specifikt til denne dag."
 
 9. Torsdag den 3. oktober 2024
 
