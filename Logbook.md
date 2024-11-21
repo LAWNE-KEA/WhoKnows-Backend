@@ -1,4 +1,4 @@
-Ugentlig dagbog studiegruppe LAWNE
+#Ugentlig dagbog studiegruppe LAWNE
 
 1. Torsdag den 29. august 2024
 
@@ -31,28 +31,37 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        Makefile doesn't work for any of the group members despite the program being functional when you circumvent it.
+        "Makefile virker ikke for nogle af gruppemedlemmerne selvom programmet er fuldt funktionelt når man finder en vej omkring det."
 
-        Code is written inefficiently with functions being unnecessarily complex and long.
+        "Koden er skrevet ineffektivt med funktioner som unødvengig komplekse og lange."
 
-        Env variables are in source code instead of as secrets.
+        "Env variabler er i source code i stedet for i secrets (vigtigt)".
 
-        Some of the tests seem to be working incorrectly.
+        "Nogle af testsne ser ud til ikke at virke korrekt."
 
-        md5 is not as safe as it was in 2009.
+        "md5 er ikke sikker som da det var i 2009."
 
-        Missing import in tests.
+        "Der er nogle imports som der mangler i tests."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
+        "Ikke noget specifikt". Vi glædede os blot til at komme i gang!"
+
     3. Var der noget der gik godt?
+
+        "Vi havde allerede en lille idé om hvilke fejl der var i legacy koden og hvordan måske kunne gribe det an."
 
     4. Var der noget der gik galt?
 
+        "Ikke noget specifikt".
+
     5. Var der nogle ting som vi fandt læringsrige?
+
+        "At hvor mange frameworks, libraries, and what not der findes som der er gode."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
+        "Om hvilke udfordringer vi nok skulle støde ind i, i løbet af semesteret."
 
 3. Torsdag den 5. september 2024
 
