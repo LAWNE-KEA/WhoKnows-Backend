@@ -280,15 +280,31 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Nothing in particular".
+
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Nothing in particular".
+
 
     3. Var der noget der gik godt?
 
+        "We created a docker workflow to test ec2. We made minor changed to the Dockerfile, while also changing a few things in our CSS file. We also made some changes to our tmpl function. We finished a lot of work o nthe handlers and services. Added ENV handling. The backend is now working with docker compose and postgres. we added Air to our project, which is a program that keeps our code being updated as to when we make our changes in our code, you can see that the update to the code is happening live in the terminal".
+
+        "We took our backend and made several folders to make it a lot more organized." It really helped us to have a better work environment, cleared up a lot of mess in our code, and made it a lot easier for us to understand what is going on and where"
+
     4. Var der noget der gik galt?
+
+        "There was nothing per say that went wrong, but we begang to clean up our code".
 
     5. Var der nogle ting som vi fandt læringsrige?
 
+        "Nothing in particular".
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "Nothing in particular".
 
 15. Tirsdag den 19. november 2024
 
@@ -345,7 +361,21 @@ Ugentlig dagbog studiegruppe LAWNE
 
         "At til når vi når dertil hvor vi virkelig mangler plads på serveren, at vi skal til at tænkte over at få lavede nogle flere servere".
 
-17. Torsdag den 28. november 2024
+17. Søndag den 24. november 2024
+
+    1. Havde vi nogle problemer, som var værd at reflektere over?
+
+    2. Havde vi gjort os nogle overvejelser om noget?
+
+    3. Var der noget der gik godt?
+
+    4. Var der noget der gik galt?
+
+    5. Var der nogle ting som vi fandt læringsrige?
+
+    6. Evt. spørgsmål som vi stillede os selv?
+
+18. Torsdag den 28. november 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
@@ -360,7 +390,7 @@ Ugentlig dagbog studiegruppe LAWNE
     6. Evt. spørgsmål som vi stillede os selv?
 
 
-18. Torsdag den 5. december 2024
+19. Torsdag den 5. december 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
@@ -374,7 +404,7 @@ Ugentlig dagbog studiegruppe LAWNE
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-19. Torsdag den 12. december 2024
+20. Torsdag den 12. december 2024
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
