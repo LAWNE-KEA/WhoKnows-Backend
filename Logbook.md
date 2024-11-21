@@ -147,20 +147,23 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        Det var kun Nikolaj som var her, da William skulle til lægen
+        "Det var kun Nikolaj som var her, da William skulle til lægen"
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
     3. Var der noget der gik godt?
 
+        "We deployed our application to Vercel, but were soon to realize that it was not allowed".
+
+        "We made a deployment for our backend to AWS which seemed to work fine."
+
     4. Var der noget der gik galt?
 
-        Vores frontend app er deployet på Versel, men det er forbudt sagde Anders
+        "Vores frontend app er deployet på Versel, men det er forbudt, sagde Anders."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        Det var læringsrigt at man kunne køre npx linting i sin kode, så når man nu er i et automatiseret miljø, bliver man stoppet
-        når man prøver at committe sin kode.
+        "Det var læringsrigt at man kunne køre npx linting i sin kode, så når man nu er i et automatiseret miljø, bliver man stoppet når man prøver at committe sin kode."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
@@ -188,9 +191,15 @@ Ugentlig dagbog studiegruppe LAWNE
 
     4. Var der noget der gik galt?
 
+        "We got told that our API specification had to be remade in terms of our get requests. All the GET requests which we have deleted has to be used because otherwise the simulation will not work". That means that we have to create the same HTML structure as the legacy project. Therefor a multipage application instead of a single page application."
+
     5. Var der nogle ting som vi fandt læringsrige?
 
+        "We saw that we really had to put a lot of effort to get us the finish line, and to make this work! A lot of surprises can occur all of a sudden".
+
     6. Evt. spørgsmål som vi stillede os selv?
+
+        "We thought about how we would manage this, as it really was a big setback for us, but we managed it".
 
 9. Torsdag den 10. oktober 2024
 
@@ -282,11 +291,9 @@ Ugentlig dagbog studiegruppe LAWNE
 
         "Nothing in particular".
 
-
     2. Havde vi gjort os nogle overvejelser om noget?
 
         "Nothing in particular".
-
 
     3. Var der noget der gik godt?
 
