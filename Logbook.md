@@ -298,13 +298,23 @@ Ugentlig dagbog studiegruppe LAWNE
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
+        "Vi manglede stadigvæk at få oprettet vores domæne."
+
     2. Havde vi gjort os nogle overvejelser om noget?
+
+        "Ikke noget specifikt til denne dag."
 
     3. Var der noget der gik godt?
 
+        "Vi har fået oprettet et domæne til vores applikation!"
+
     4. Var der noget der gik galt?
 
+        "Ikke noget specifikt til denne dag."
+
     5. Var der nogle ting som vi fandt læringsrige?
+
+        "Vi lærte om hvordan man fik oprettet et domæne til vores applikation."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
