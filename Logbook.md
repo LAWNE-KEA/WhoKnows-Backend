@@ -139,27 +139,27 @@
 
     1. Havde vi nogle problemer, som var værd at reflektere over?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
     3. Var der noget der gik godt?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
     4. Var der noget der gik galt?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
     6. Evt. spørgsmål som vi stillede os selv?
 
-        -
+        "Ikke nogle specifik til denne dag."
 
 6. Torsdag den 19. september 2024
 
