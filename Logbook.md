@@ -469,7 +469,7 @@
 
     2. Havde vi gjort os nogle overvejelser om noget?
 
-        "Ikke specifikt, men man tænkte da over om hvordan terraform kunne integreres i ens projekt".
+        "Ikke specifikt, men man tænkte da over om hvordan terraform kunne integreres i ens projekt."
 
     3. Var der noget der gik godt?
 
@@ -477,15 +477,15 @@
 
     4. Var der noget der gik galt?
 
-        "Der var ikke noget som gik galt".
+        "Der var ikke noget som gik galt."
 
     5. Var der nogle ting som vi fandt læringsrige?
 
-        "Hvor nemt og hurtigt det egentlig gik at oprette virtuelle maskiner med Terraform. Selvom man måske tænkte at det alligevel tog 1 minut, så er det stadigvæk hurtigt ift. for år siden".
+        "Hvor nemt og hurtigt det egentlig gik at oprette virtuelle maskiner med Terraform. Selvom man måske tænkte at det alligevel tog 1 minut, så er det stadigvæk hurtigt ift. for år siden."
 
     6. Evt. spørgsmål, som vi stillede os selv?
 
-        "At til når vi når dertil hvor vi virkelig mangler plads på serveren, at vi skal til at tænkte over at få lavede nogle flere servere".
+        "At til når vi når dertil hvor vi virkelig mangler plads på serveren, at vi skal til at tænkte over at få lavede nogle flere servere."
 
 18. Søndag den 24. november 2024
 
