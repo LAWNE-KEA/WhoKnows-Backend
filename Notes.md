@@ -137,7 +137,6 @@ Commit conventions, try to keep the format of:
             ├── main
             └── whoknows.db
 
-
   During the restructuring the opportunity to refactor and/or rewrite several featutes was taken, as we had become more familiar with golang. During this the desition was made to add Gorm to the project. Gorm made our lives significantly easier and despite the complexity of learning a new framework it ultimately reduced the overall complexity of the backend.
 
   Another change was the move from MD5 to bcrypt (finally). MD5 hasn't been safe for a while and so it was finally ditched.
@@ -183,10 +182,7 @@ Consider whether you want to ensure linting before anyone can push their code or
 
   - Because Go implicit have linting capabilities build into it, we consider it as something that we have already been given by Go.
 
-
 # New sonarqube:
   We have since readded sonarqube and it identified a few issues with the html and logout_handler which we have resolved. They were minor issues and easy to fix.
 
 # GitHub Badge for GitHub Actions
-
-![<TEXT ON SHIELD>](https://github.com/<LAWNE-KEA>/<WhoKnows-Backend>/actions/workflows/<WORKFLOW_FILENAME.yml>/badge.svg?branch=main)

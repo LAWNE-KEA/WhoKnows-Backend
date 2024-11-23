@@ -22,6 +22,6 @@ One way to follow along is by:
 
 If you have any suggestions or improvements to the tutorials, feel free to open a pull request.
 
+# GitHub Badge for GitHub Actions
 
-
-
+![<LAWNE WORKFLOW>](https://github.com/<LAWNE-KEA>/<WhoKnows-Backend>/actions/workflows/<deploy.yml>/badge.svg?branch=main)
