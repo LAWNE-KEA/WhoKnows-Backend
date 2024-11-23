@@ -2,7 +2,7 @@ name: deploy
 on:
   push:
     branches:
-      - main
+      - 31-implement-github-badge-for-github-actions
   workflow_dispatch:
 
 jobs:
