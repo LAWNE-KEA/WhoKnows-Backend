@@ -29,17 +29,13 @@ func main() {
 	initLogger()
 	database.InitDatabase()
 
-	handler := api.CreateRouter()
-	monitoring.RegisterMetrics()
-	monitoring.ExposeMetrics()
-
 	server := &http.Server{
 		Addr:    ":8080",
-		Handler: handler,
+		Handler: api.CreateRouter(),
 	}
 	fmt.Println("Server running on port 8080")
 	server.ListenAndServe()
-	
+
 }
 
 // func parseSQLCommands(sqlCommands string) []string {
