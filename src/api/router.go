@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 
 	"whoKnows/api/handlers"
-	"whoKnows/monitoring"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -17,9 +16,6 @@ func CreateRouter() http.Handler {
 	router := mux.NewRouter()
 	setApiRoutes(router)
 	setFileRoutes(router)
-
-	monitoring.RegisterMetrics()
-	monitoring.ExposeMetrics()
 
 	corsRouter := corsMiddleware()
 
