@@ -68,7 +68,8 @@ jobs:
             docker pull ghcr.io/lawne-kea/whoknows
 
             # Copy the nginx.conf file
-            cp nginx.conf /home/${{ secrets.AWS_USER }}/whoknows/nginx.conf
+            echo "Copying nginx.conf file..."
+            git checkout origin/main -- nginx.conf
 
             # Start Docker services for production
             echo "Starting Docker services for production..."
