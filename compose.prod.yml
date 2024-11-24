@@ -80,3 +80,27 @@ services:
       test: ["CMD-SHELL", "pg_isready -U ${ENV_DATABASE_USER} -d ${ENV_DATABASE_NAME}"]
       interval: 10s
       timeout: 5s
+
+  postgres-exporter:
+    container_name: postgres-exporter
+    image: wrouesnel/postgres_exporter:latest
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${ENV_DATABASE_USER}:${ENV_DATABASE_PASSWORD}@db:5432/${ENV_DATABASE_NAME}?sslmode=${ENV_DATABASE_SSLMODE}
+    ports:
+      - "9187:9187"
+    networks:
+      - WhoKnows-LAWNE
+    depends_on:
+      - db
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - WhoKnows-LAWNE
