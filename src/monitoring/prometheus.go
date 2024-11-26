@@ -141,11 +141,6 @@ func RegisterMetrics() {
 
 func ExposeMetrics() {
 	http.Handle("/metrics", promhttp.Handler())
-	go func() {
-		if err := http.ListenAndServe(":9090", nil); err != nil {
-			LogError(err, "Failed to start Prometheus metrics server", nil)
-		}
-	}()
 	LogInfo("Prometheus metrics server started on port 9090", nil)
 }
 

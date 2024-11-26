@@ -94,12 +94,13 @@ services:
     depends_on:
       - db
 
-  promtail:
-    container_name: promtail
-    image: grafana/promtail:latest
-    restart: always
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
     volumes:
-      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
     networks:
       - WhoKnows-LAWNE
 
