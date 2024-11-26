@@ -21,9 +21,10 @@ func CreateRouter() http.Handler {
 	monitoring.RegisterMetrics()
 	monitoring.ExposeMetrics(router)
 
+	monitoringMiddleware := monitoringMiddleware(router)
 	corsRouter := corsMiddleware()
 
-	return corsRouter(router)
+	return corsRouter(monitoringMiddleware)
 }
 
 // Middleware to handle CORS
@@ -63,5 +64,18 @@ func customFileServer(root http.FileSystem) http.Handler {
 			}
 		}
 		http.FileServer(root).ServeHTTP(w, r)
+	})
+}
+
+func monitoringMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		method := r.Method
+		endpoint := r.URL.Path
+
+		monitoring.IncrementActiveRequests(method, endpoint)
+		monitoring.IncrementHTTPRequest(method, endpoint)
+		next.ServeHTTP(w, r)
+		monitoring.DecrementActiveRequests(method, endpoint)
 	})
 }

@@ -7,6 +7,7 @@ import (
 	"whoKnows/api/services"
 	"whoKnows/database"
 	"whoKnows/models"
+	"whoKnows/monitoring"
 
 	"gorm.io/gorm"
 )
@@ -23,6 +24,8 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	searchLog := logSearch(query)
 	fmt.Println("Query:", query)
+
+	monitoring.IncrementSearchQueries(query)
 
 	var pages []models.PageData
 	results := database.Connection.Where("language like ? AND title ILIKE ?", lang, "%"+query+"%").Order("title")

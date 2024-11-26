@@ -9,6 +9,7 @@ import (
 	"whoKnows/api/services"
 	"whoKnows/database"
 	"whoKnows/models"
+	"whoKnows/monitoring"
 	"whoKnows/security"
 
 	"github.com/go-playground/validator/v10"
@@ -58,6 +59,8 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
+	monitoring.IncrementUserRegistrations()
 
 	response := map[string]interface{}{
 		"status":  "success",
