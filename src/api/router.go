@@ -19,7 +19,7 @@ func CreateRouter() http.Handler {
 	setFileRoutes(router)
 
 	monitoring.RegisterMetrics()
-	monitoring.ExposeMetrics()
+	monitoring.ExposeMetrics(router)
 
 	corsRouter := corsMiddleware()
 

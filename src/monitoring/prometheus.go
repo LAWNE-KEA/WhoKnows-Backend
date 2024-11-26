@@ -1,8 +1,10 @@
 package monitoring
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -139,9 +141,14 @@ func RegisterMetrics() {
 // and starts a server on port 9090 to expose these metrics. If the server fails to start,
 // an error is logged. A log message is also generated when the server starts successfully.
 
-func ExposeMetrics() {
-	http.Handle("/metrics", promhttp.Handler())
-	LogInfo("Prometheus metrics server started on port 9090", nil)
+func ExposeMetrics(router *mux.Router) {
+	router.Handle("/api/metrics", promhttp.Handler())
+	LogInfo("Starting Prometheus metrics server on port 9090", nil)
+	go func() {
+		if err := http.ListenAndServe(":9090", router); err != nil {
+			fmt.Printf("Error starting Prometheus metrics server: %s", err)
+		}
+	}()
 }
 
 // IncrementHTTPRequest increments the HTTP request counter
