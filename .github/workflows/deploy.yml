@@ -70,6 +70,10 @@ jobs:
             # Copy the nginx.conf file
             echo "Copying nginx.conf file..."
             git checkout origin/main -- nginx.conf
+            
+            # Copy prometheus.yml file
+            echo "Copying prometheus.yml file..."
+            git checkout origin/main -- prometheus.yml
 
             # Start Docker services for production
             echo "Starting Docker services for production..."
