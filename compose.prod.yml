@@ -81,6 +81,15 @@ services:
       interval: 10s
       timeout: 5s
 
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - WhoKnows-LAWNE
+
   postgres-exporter:
     container_name: postgres-exporter
     image: wrouesnel/postgres_exporter:latest
