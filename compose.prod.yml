@@ -112,6 +112,9 @@ services:
       - "9090:9090"
     networks:
       - WhoKnows-LAWNE
+    depends_on:
+      - postgres-exporter
+      - node-exporter
 
   node-exporter:
     container_name: node-exporter
