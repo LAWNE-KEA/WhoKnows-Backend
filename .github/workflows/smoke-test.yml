@@ -1,0 +1,29 @@
+name: Smoke Test
+
+on:
+  workflow_run:
+    workflows: ["deploy"]
+    types:
+      - completed
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Run smoke test with cURL
+        run: |
+          # Replace with the actual URL of your deployed application
+          URL="https://lawne.dk/"
+
+          # Perform the request and capture the HTTP status code
+          HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" $URL)
+
+          # Check if the status code is 200
+          if [ $HTTP_STATUS -eq 200 ]; then
+            echo "Smoke test passed."
+          else:
+            echo "Smoke test failed with status code $HTTP_STATUS"
+            exit 1
+          fi
