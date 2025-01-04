@@ -32,9 +32,3 @@ The LAWNE App is a web-based application focused on user authentication, data st
 - **Objective**: Sensitive data must be protected, and security practices should be up-to-date.
 - **Measurement**: Security assessments, code reviews, and penetration testing will be carried out regularly.
 - **Target**: No security vulnerabilities should be present, and all data must be encrypted using TLS 1.2+ and AES-256.
-
----
-
-## Conclusion
-
-The SLOs ensure that the LAWNE App meets high standards for availability, response times, and security. Monitoring and incident management procedures will help track performance and handle any issues that arise.
