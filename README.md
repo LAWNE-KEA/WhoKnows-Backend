@@ -21,7 +21,3 @@ One way to follow along is by:
 ## Pull requests
 
 If you have any suggestions or improvements to the tutorials, feel free to open a pull request.
-
-
-
-
