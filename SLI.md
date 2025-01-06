@@ -1,4 +1,4 @@
-# Service Level Indicators (SLI) - LAWNE App
+# Service Level Indicators (SLI) - LAWNE
 
 ### 1. **Availability**
 
