@@ -38,7 +38,6 @@ This SLA applies to the LAWNE App, which provides the following services:
 
 ## 4. Security Measures
 1. Data is encrypted using TLS 1.2+ and AES-256 for secure communications.
-2. Multi-Factor Authentication (MFA) is enforced for all admin access.
 3. The backend is designed with secure practices, including moving from MD5 to bcrypt for password hashing.
 
 ---
