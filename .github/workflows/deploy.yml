@@ -38,7 +38,7 @@ jobs:
           echo "Deploying with IMAGE_TAG: ${{ env.IMAGE_TAG }}"
 
           # SSH into AWS EC2 instance
-          ssh -o StrictHostKeyChecking=no ${{ secrets. git commit -am "Added a minor change, to add a docker group to deply.yml."AWS_USER }}@${{ secrets.AWS_IP }} << EOF
+          ssh -o StrictHostKeyChecking=no ${{ secrets.AWS_USER }}@${{ secrets.AWS_IP }} << EOF
             sudo usermod -aG docker ${{ secrets.AWS_USER }}
             newgrp docker
             cd /home/${{ secrets.AWS_USER }}/whoknows || exit
