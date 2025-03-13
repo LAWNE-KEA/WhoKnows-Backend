@@ -8,7 +8,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	github.com/rs/cors v1.11.1
-	golang.org/x/crypto v0.29.0
+	golang.org/x/crypto v0.35.0
 	gorm.io/gorm v1.25.12
 )
 
@@ -31,12 +31,11 @@ require (
 	github.com/prometheus/client_model v0.6.1 // indirect
 	github.com/prometheus/common v0.55.0 // indirect
 	github.com/prometheus/procfs v0.15.1 // indirect
-	golang.org/x/net v0.31.0 // indirect
-	golang.org/x/sync v0.9.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
-	golang.org/x/text v0.20.0 // indirect
+	golang.org/x/net v0.36.0 // indirect
+	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
-	gorm.io/driver/sqlite v1.5.6 // indirect
 )
 
 require (
@@ -44,4 +43,5 @@ require (
 	github.com/prometheus/client_golang v1.20.5
 	github.com/sirupsen/logrus v1.9.3
 	gorm.io/driver/postgres v1.5.9
+	gorm.io/driver/sqlite v1.5.6
 )
